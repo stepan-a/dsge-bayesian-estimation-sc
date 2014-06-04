@@ -1,0 +1,1017 @@
+\documentclass[10pt,slidestop]{beamer}
+
+\usepackage{etex}
+
+\usepackage{fourier-orns}
+\usepackage{ccicons}
+\usepackage{amssymb}
+%\usepackage[centertags]{amsmath}
+\usepackage{amstext}
+\usepackage{amsbsy}
+\usepackage{amsopn}
+\usepackage{amscd}
+\usepackage{amsxtra}
+\usepackage{amsthm}
+\usepackage{float}
+\usepackage{color}
+\usepackage{mathrsfs}
+\usepackage{bm}
+\usepackage{lastpage}
+\usepackage[nice]{nicefrac}
+\usepackage{setspace}
+\usepackage{hyperref}
+\usepackage{ragged2e}
+\usepackage{listings}
+\usepackage{algorithms/algorithm}
+\usepackage{algorithms/algorithmic}
+
+\usepackage{tikz,pgfplots}
+\pgfplotsset{compat=newest}
+%\pgfplotsset{compat=1.8}
+\usetikzlibrary{patterns, arrows, decorations.pathreplacing, decorations.markings, calc}
+\pgfplotsset{plot coordinates/math parser=false}
+\newlength\figureheight
+\newlength\figurewidth
+\usepackage[utf8x]{inputenc}
+\usepackage{cancel}
+
+
+\newcommand{\trace}{\mathrm{tr}}
+\newcommand{\vect}{\mathrm{vec}}
+\newcommand{\tracarg}[1]{\mathrm{tr}\left\{#1\right\}}
+\newcommand{\vectarg}[1]{\mathrm{vec}\left(#1\right)}
+\newcommand{\vecth}[1]{\mathrm{vech}\left(#1\right)}
+\newcommand{\iid}[2]{\mathrm{iid}\left(#1,#2\right)}
+\newcommand{\normal}[2]{\mathcal N\left(#1,#2\right)}
+\newcommand{\dynare}{\href{http://www.dynare.org}{\color{blue}Dynare}}
+\newcommand{\AllSample}{ \mathcal Y_T }
+\newcommand{\sample}{\mathcal Y_T}
+\newcommand{\samplet}[1]{\mathcal Y_{#1}}
+\newcommand{\slidetitle}[1]{\fancyhead[L]{\textsc{#1}}}
+
+\definecolor{gray}{gray}{0.4}
+
+\setbeamertemplate{footline}{
+{\hfill\vspace*{1pt}\href{http://creativecommons.org/licenses/by-sa/3.0/legalcode}{\ccbysa}\hspace{.1cm}
+\raisebox{-.05cm}{\href{https://bitbucket.org/stepan-a/dsge-bayesian-estimation-sc.git}{\includegraphics[scale=.05]{../img/bitbucket.png}}}
+}\hspace{1cm}}
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{blocks}[rounded][shadow=true]
+\newenvironment{notes}
+{\bgroup \justifying\bgroup\tiny\begin{spacing}{1.0}}
+{\end{spacing}\egroup\egroup}
+
+\newenvironment{exercise}[1]
+{\bgroup \small\begin{block}{Ex. #1}}
+{\end{block}\egroup}
+
+\begin{document}
+
+\title{Bayesian Econometrics Primer\\ \& \\ Estimation of linearized
+  DSGE models}
+\author[S. Adjemian]{St\'ephane Adjemian}
+\institute{\texttt{stephane.adjemian@univ-lemans.fr}}
+\date{June, 2014}
+
+\begin{frame}
+  \titlepage{}
+\end{frame}
+
+\section{Introduction}
+
+\begin{frame}
+  \frametitle{Introduction}
+  \begin{itemize}
+    \item Full information Bayesian approach to linear(ized) DSGE models.
+    \item Basically, this approach allows to incorporate prior
+      knowledge about the model and its parameters in the inference
+      procedure.
+    \item We first present the Bayesian approach in the case of a simple
+      linear model for which closed form expressions are available.
+    \item And we discuss issues specific to the estimation of DSGE models.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Outline}
+    \tableofcontents
+  \end{frame}
+
+\section{Maximum likelihood estimation}
+
+\begin{frame}
+  \frametitle{MV Estimation}
+  \begin{itemize}
+    \item A model ($\mathcal M$) defines a joint probability distribution parameterized
+      (by $\theta_{\mathcal M}$) function over a sample of variables (say $\AllSample$):
+      \begin{equation}\label{equ:bayes:model}
+        f(\AllSample | \theta_{\mathcal M} , \mathcal M)
+      \end{equation}
+    \item The parameters $\theta_{\mathcal M}$ can be estimated by
+      confronting the model to the data through:
+      \begin{itemize}
+      \item[--] Some moments of the DGP.
+      \item[--] The probability density function of the DGP (all the moments).
+      \end{itemize}
+    \item The first approach is a method of moments, the second
+      one corresponds to the Maximum Likelihood approach.
+    \item Basically, a MV estimate for $\theta_{\mathcal M}$ is
+      obtained by maximizing the density of the sample with respect to
+      the parameters (we seek the value of $\theta_{\mathcal M}$ that
+      maximizes the ``probability of occurence'' of the sample given
+      by the Nature).
+    \item In the sequel, we will denote $\mathcal L(\theta) = f(\AllSample | \theta )$ the
+      likelihood function, omitting the indexation with respect to the
+      model when not necessary.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{MV Estimation}
+  \framesubtitle{A simple static model}
+  \begin{itemize}
+    \item As a first example, we consider the following model:
+      \begin{equation}
+        \label{eq:simple-static-model:1}\tag{2-a}
+        y_t = \mu_0 + \epsilon_t
+      \end{equation}
+      where $\epsilon_t\underset{\mathrm{iid}}{\sim}\normal{0}{1}$ and
+      $\mu_0$ is an unknown finite real parameter.
+      \bigskip
+    \item According to this model, $y_t$ is normally distributed:
+      \[
+      y_t|\mu_0 \sim \normal{\mu_0}{1}
+      \]
+      and $\mathbb E[y_ty_s] = 0$ for all $s\neq t$.
+      \medskip
+    \item Suppose that a sample $\AllSample = \{y_1,\dots,y_T\}$ is
+      available. The likelihood is defined by:
+      \[
+      \mathcal L (\mu) = f(y_1,\dots,y_T|\mu)
+      \]
+      \medskip
+    \item Because the $y$s are $\mathrm{iid}$, the joint conditional
+      density is equal to a product of conditional densities:
+      \[
+      \mathcal L (\mu) = \prod_{t=1}^T g(y_t|\mu)
+      \]
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{MV Estimation}
+  \framesubtitle{A simple static model}
+  \begin{itemize}
+    \item Because the model is Gaussian:
+      \[
+      \mathcal L (\mu) = \prod_{t=1}^T \frac{1}{\sqrt{2\pi}}e^{-\frac{(y_t-\mu)^2}{2}}
+      \]
+      \bigskip
+    \item Finally we have:
+      \begin{equation}
+        \label{eq:simple-static-model:2}\tag{2-b}
+        \mathcal L (\mu) = (2\pi)^{-\frac{T}{2}}e^{-\frac{1}{2}\sum_{t=1}^T(y_t-\mu)^2}
+      \end{equation}
+      \bigskip
+    \item Note that the likelihood function depends on the data.
+      \bigskip
+    \item Suppose that $T=1$ (only one observation in the sample). We can
+      graphically determine the ML estimator of $\mu$ in this case.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{MV Estimation}
+  \framesubtitle{A simple static model (cont'd)}
+  \begin{center}
+    \begin{tikzpicture}
+      \input{../img/likelihood-simple-static-model.tex}
+    \end{tikzpicture}
+  \end{center}
+  {\small Clearly, the value of the density of $y_1$ conditional on
+    $\mu$, \emph{ie} the likelihood, is maximized for $\mu=y_1$: for
+  any $\bar\mu\neq y_1$ we have $f(y_1|\mu=\bar\mu)<f(y_1|\mu=y_1)$}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{MV Estimation}
+  \framesubtitle{A simple static model (cont'd)}
+  \begin{itemize}
+  \item[$\Rightarrow$] If we have only one observation, $y_1$, the
+    Maximum Likelihood estimator is the observation:
+    $\widehat{\mu} = y_1$.
+    \item This estimator is unbiased and its variance is 1.
+      \bigskip
+    \item More generally, one can show that the maximum likelihood
+      estimator is equal to the sample mean:
+      \begin{equation}
+        \label{eq:simple-static-model:2}\tag{2-c}
+        \widehat{\mu}_{T} = \frac{1}{T}\sum_{t=1}^Ty_t
+      \end{equation}
+    \item This estimator is unbiased and its variance is given by:
+      \begin{equation}
+        \label{eq:simple-static-model:2}\tag{2-d}
+        \mathbb V\left[\widehat{\mu}_{T}\right] = \frac{1}{T}
+      \end{equation}
+      \item Because $\mathbb V\left[\widehat{\mu}\right]$ goes to
+        zero as the sample size goes to infinity, we know that this
+        estimator converges in probability to the true value $\mu_0$
+        of the unknown parameter:
+        \[
+        \widehat{\mu}_{T}\overset{\text{\tiny{proba}}}{\underset{T\rightarrow\infty}{\longrightarrow}} \mu_0
+        \]
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{MV Estimation}
+  \framesubtitle{A simple dynamic model}
+  \begin{itemize}
+  \item Suppose that the data are generated by an AR(1) model:
+    \[
+    y_t = \varphi y_{t-1} + \epsilon_t
+    \]
+    with $|\varphi|<1$ and
+    $\epsilon_t\underset{\mathrm{iid}}{\sim}\normal{0}{\sigma_{\epsilon}^2}$.
+
+    \medskip
+
+  \item In this case, $y_t$ depends (directly) on  $y_{t-1}$ and also
+    on $y_{t-2}, y_{t-3}, ...$.
+
+    \medskip
+
+  \item It is no more legal to write the likelihood as the  as a product of
+    marginal densities of the observations.
+
+    \medskip
+
+  \item The joint density of $\mathrm y \equiv
+      (y_t,y_{t+1},\dots,y_{t+H-1})'$ is given by:
+      \[
+      f(\mathrm y) = (2\pi)^{-\frac{H}{2}}|\Sigma_y|^{-\frac{1}{2}}e^{-\frac{1}{2}\mathrm
+        y'\Sigma_{y}^{-1}\mathrm y}
+      \]
+      with
+      {\tiny\[
+      \Sigma_y = \frac{\sigma^{2}_{\epsilon}}{1-\varphi^2}
+      \begin{pmatrix}
+        1    & \varphi         & \varphi^2 & \dots     & \dots   & \varphi^{H-1} \\
+  \varphi    & 1               & \varphi   & \varphi^2 & \dots   & \varphi^{H- 2} \\
+   \vdots    &                 &           &           &         &               \\
+\varphi^{H-1} & \varphi^{H- 2}   & \dots      & \dots    & \varphi  & 1
+      \end{pmatrix}
+      \]}
+    under the assumption of stationarity $\Rightarrow$ Likelihood function.
+  \end{itemize}
+  \end{frame}
+
+
+\begin{frame}
+  \frametitle{MV Estimation}
+  \framesubtitle{A simple dynamic model (cont'd)}
+
+    \begin{itemize}
+      \item The inverse of the covariance
+      matrix, $\Sigma_y$, can be factorized as $\Sigma_y ^{-1}=
+      \sigma_{\epsilon}^{-2}L'L$ with:
+      {\tiny\[
+        L =
+        \begin{pmatrix}
+          \sqrt{1-\varphi^2} & 0 & 0 & \dots & 0 & 0\\
+          -\varphi & 1 & 0 &\dots & 0 & 0 \\
+          0 & -\varphi & 1 & \dots & 0 & 0 \\
+          \vdots & &&&& \vdots \\
+          0 & &&&-\varphi & 1
+        \end{pmatrix}
+      \]}
+    a $T\times T$ matrix. 
+    \item The likelihood function can be
+    written equivalently as:
+    \[
+    \mathcal L(\varphi,\sigma_{\epsilon}^2) =
+    (2\pi)^{-\frac{T}{2}}\left(\frac{\sigma_{\epsilon}^2}{1-\varphi^2}\right)^{-\frac{1}{2}}\sigma_{\epsilon}^{T-1}
+    e^{-\frac{1-\varphi^2}{2\sigma_{\epsilon}^2}y_1^2}e^{-\frac{1}{2\sigma_{\epsilon}^2}\sum_{t=2}^T\left(y_t-\varphi
+      y_{t-1}\right)^2}
+    \]
+    \end{itemize}
+  \end{frame}
+
+\section{Prior and posterior beliefs}
+
+\begin{frame}
+  \frametitle{Bayes theorem}
+
+  \begin{itemize}
+
+  \item Let $A$ and $B$ be two events.
+
+    \bigskip
+
+  \item Let $\mathbb P(A)$ and  $\mathbb P(AB)$ be the marginal
+    probabilities of these events.
+
+    \bigskip
+
+  \item Let $\mathbb P(A \cap B)$ be the joint probability of events $A$
+    and $B$.
+
+    \bigskip
+
+  \item The Bayes theorem states that the probability of $B$
+    conditional on $A$ is given by:
+    \[
+    \mathbb P(B|A) = \frac{\mathbb P(A \cap B)}{\mathbb P(A)}
+    \]
+
+    \bigskip
+
+  \item Or equivalently, that a joint probability can be expressed as
+    the product of a conditional density and a marginal density:
+    \[
+    \mathbb P(A \cap B) = \mathbb P(B|A)\mathbb P(A)
+    \]
+    \[
+    \Rightarrow \mathbb P(B|A) = \frac{\mathbb P(A|B)\mathbb P(B)}{\mathbb P(A)}
+    \]
+
+    \bigskip
+
+  \item Same for continuous random variables.
+
+  \end{itemize}
+
+   \end{frame}
+
+
+\begin{frame}
+  \frametitle{Prior and posterior beliefs}
+
+  \begin{itemize}
+
+  \item We assume that we are able to characterize our prior knowledge
+    about a parameter with a probability density function.
+
+  \item Let $p_0(\theta)$ be the prior density characterizing our beliefs about the vector
+    of parameters $\theta$.
+
+  \item Our aim is to update our (prior) beliefs about $\theta$ with
+    the sample information ($\AllSample$) embodied in the likelihood
+    function, $\mathcal L(\theta) = f(\AllSample|\theta)$.
+
+  \item We define the posterior density, $p_1(\theta|\AllSample)$,
+    which represents our updated beliefs.
+
+   \item By the Bayes theorem we have:
+     \[
+     p(\theta|\AllSample) = \frac{g(\theta,\AllSample)}{p(\AllSample)}
+     \]
+     and
+     \[
+      p(\theta|\AllSample) = \frac{f(\theta|\AllSample)p_0(\theta)}{p(\AllSample)}
+     \]
+     where $g$ is the joint density of the sample and the parameters.
+  \end{itemize}
+
+   \end{frame}
+
+
+\begin{frame}
+  \frametitle{Prior and posterior beliefs (cont'd)}
+
+  \begin{itemize}
+
+  \item The posterior density is given by:
+    \[
+    p(\theta|\AllSample) = \frac{\mathcal L(\theta)p_0(\theta)}{p(\AllSample)}
+    \]
+
+  \item Noting that the denominator does not depend on the parameters,
+    we have that the posterior density is proportional (w.r.t
+    $\theta$) to the product of the likelihood and the prior density:
+    \[
+    p(\theta|\AllSample) \propto \mathcal L(\theta)p_0(\theta)
+    \]
+
+  \item All the posterior inference about the
+    parameters can be done with the posterior kernel: $\mathcal
+    L(\theta)p_0(\theta)$.
+
+  \item The denominator is the marginal density of the sample. Because
+    a density has to sum up to one, we have:
+    \[
+    p(\AllSample) = \int f(\AllSample|\theta)p_0(\theta)\mathrm d\theta
+    \]
+    The marginal density is a weighted average of the likelihood
+    function $\rightarrow$ will be used later for model comparison.
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Prior and posterior beliefs}
+  \framesubtitle{A simple static model (cont'd)}
+  \begin{itemize}
+  \item For the sake of simplicity, we will see why later, we choose a
+    Gaussian prior for the parameter $\mu$, with prior expectation
+    $\mu_0$ and prior variance $\sigma_{\mu}^2$:
+    \[
+    p_0(\mu) = \frac{1}{\sigma_{\mu}\sqrt{2\pi}}e^{-\frac{1}{2\sigma_{\mu}^2}\left(\mu-\mu_0\right)^2}
+    \]
+  \item The smaller is the prior variance, $\sigma_{\mu}^2$, the more
+    informative is the prior.
+  \item The posterior density is proportional to the product of the
+    prior density and the likelihood:
+    \[
+    p_1(\mu|\AllSample) \propto \frac{1}{\sigma_{\mu}\sqrt{2\pi}}e^{-\frac{1}{2\sigma_{\mu}^2}\left(\mu-\mu_0\right)^2}(2\pi)^{-\frac{T}{2}}e^{-\frac{1}{2}\sum_{t=1}^T(y_t-\mu)^2}
+    \]
+  \item One can show that the righthand side expression is
+    proportional to a Gaussian density.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Prior and posterior beliefs}
+  \framesubtitle{A simple static model (cont'd)}
+
+  \begin{itemize}
+
+  \item The likelihood can be equivalently written as:
+    \[
+    \mathcal L(\mu) =  (2\pi)^{-\frac{T}{2}}e^{-\frac{1}{2}\left(\nu s^2 + T \left(\mu-\widehat{\mu}\right)^2\right)}
+    \]
+    with $\nu=T-1$ and
+    \[
+    s^2 = \frac{1}{\nu}\sum_{t=1}^T\left(y_t-\widehat{\mu}\right)^2
+    \]
+
+  \item $s^2$ and $\widehat{\mu}$ are sufficient statistics:
+    they convey all the necessary sample information regarding the
+    inference w.r.t $\mu$.
+
+  \item We use this alternative expression of the likelihood to show
+    that the posterior density is Gaussian. We have:
+    \[
+    p_1(\mu|\AllSample) \propto \frac{1}{\sigma_{\mu}\left(\sqrt{2\pi}\right)^{T+1}}e^{-\frac{1}{2\sigma_{\mu}^2}\left(\mu-\mu_0\right)^2-\frac{\nu}{2}s^2 - \frac{T}{2} \left(\mu-\widehat{\mu}\right)^2}
+    \]
+
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Prior and posterior beliefs}
+  \framesubtitle{A simple static model (cont'd)}
+
+  \begin{itemize}
+
+  \item We can simplify the previous expression by omitting all the
+    multiplicative terms not related to $\mu$ (this is legal because we are
+    interested in a proportionality w.r.t $\mu$):
+    \[
+    p_1(\mu|\AllSample) \propto e^{-\frac{1}{2\sigma_{\mu}^2}\left(\mu-\mu_0\right)^2 - \frac{T}{2} \left(\mu-\widehat{\mu}\right)^2}
+    \]
+
+  \item We develop the quadratic forms and remove all the terms
+    appearing additively (under the exponential function); we obtain:
+    \[
+    p_1(\mu|\AllSample) \propto
+    e^{-\frac{1}{2}\left(\sigma_{\mu}^{-2}+T\right)\left(\mu
+      - \frac{T\widehat{\mu}+\mu_0\sigma_{\mu}^{-2}}{T+\sigma_{\mu}^{-2}}\right)^2}
+    \]
+
+  \item We recognize the expression of a Gaussian density (up to a
+    scale parameter that does not depend on $\mu$).
+  \end{itemize}
+\end{frame}
+
+\begin{notes}
+  Let $A(\mu) = \frac{1}{\sigma_{\mu}^2}\left(\mu-\mu_0\right)^2 +
+  T\left(\mu-\widehat{\mu}\right)^2$. We establish the
+  last expression of the posterior kernel by rewriting $A(\mu)$ as:
+  \[
+\begin{split}
+A(\mu) &=  T(\mu-\widehat{\mu})^2
+        +\frac{1}{\sigma_{\mu}^2}(\mu-\mu_0)^2\\
+ &= T\left(\mu^2+\widehat{\mu}^2-2\mu\widehat{\mu}\right)
++\frac{1}{\sigma_{\mu}^2}\left(\mu^2+\mu_0^2-2\mu\mu_0\right)\\
+&= \left(T+\frac{1}{\sigma_{\mu}^2}\right)\mu^2
+-2\mu\left(T\widehat{\mu}+\frac{1}{\sigma_{\mu}^2}\mu_0\right)
++\left(T\widehat{\mu}^2+\frac{1}{\sigma_{\mu}^2}\mu_0^2\right)\\
+&=\left(T+\frac{1}{\sigma_{\mu}^2}\right)
+\left[
+\mu^2
+-2\mu\frac{T\widehat{\mu}+\frac{1}{\sigma_{\mu}^2}\mu_0}
+{T+\frac{1}{\sigma_{\mu}^2}}
+\right]
++\left(T\widehat{\mu}^2+\frac{1}{\sigma_{\mu}^2}\mu_0^2\right)\\
+&= {\color{red}\left(T+\frac{1}{\sigma_{\mu}^2}\right)
+\left[
+\mu-
+\frac{T\widehat{\mu}+\frac{1}{\sigma_{\mu}^2}\mu_0}
+{T+\frac{1}{\sigma_{\mu}^2}}
+\right]^2}
++\left(T\widehat{\mu}^2+\frac{1}{\sigma_{\mu}^2}\mu_0^2\right)\\
+&\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad-\frac{
+\left(T \widehat{\mu} +\frac{1}{ \sigma_{\mu }^2} \mu_0\right)^2 }
+{T+\frac{1}{\sigma_{\mu}^2}}
+\end{split}
+\]
+In the last equality, the two last additive terms do not depend on
+$\mu$ and can be therefore omitted.
+\end{notes}
+
+
+\begin{frame}
+  \frametitle{Prior and posterior beliefs}
+  \framesubtitle{A simple static model (cont'd)}
+
+  \begin{itemize}
+  \item The posterior distribution is Gaussian with (posterior) expectation:
+    \[
+    \mathbb E \left[\mu\right] =
+    \frac{T\widehat{\mu}+\frac{1}{\sigma_{\mu}^2}\mu_0}
+    {T+\frac{1}{\sigma_{\mu}^2}}
+    \]
+    and (posterior) variance:
+    \[
+    \mathbb V \left[\mu\right] = \frac{1}
+{T+\frac{1}{\sigma_{\mu}^2}}
+    \]
+  \item As soon as the amount of prior information is positive
+    ($\sigma_{\mu}^2<\infty$) the posterior variance is less than the
+    variance of the maximum likelihood estimator ($\nicefrac{1}{T}$).
+
+\bigskip
+
+  \item The posterior expectation is a convex combination of the
+    maximum likelihood estimator and the prior expectation.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Prior and posterior beliefs}
+  \framesubtitle{A simple static model (cont'd)}
+
+  \begin{itemize}
+  \item The Bayesian approach can be interpreted as a bridge between
+    the calibration approach ($\sigma_{\mu}^2=0$, infinite amount of
+    prior information) and the ML approach
+    ($\sigma_{\mu}^2=\infty$, no prior information):
+    \[
+    \mathbb E \left[\mu\right] \xrightarrow[\sigma_{\mu}^2\rightarrow 0]{}\mu_0
+    \]
+    and
+    \[
+    \mathbb E \left[\mu\right] \xrightarrow[\sigma_{\mu}^2\rightarrow \infty]{}\widehat{\mu}
+    \]
+
+    \bigskip
+
+  \item The more important is the amount of information in the sample,
+    the smaller will be the gap between the posterior expectation and
+    the ML estimator.
+  \end{itemize}
+\end{frame}
+
+\section{Point estimate}
+
+\begin{frame}
+  \frametitle{Point estimate}
+
+  \begin{itemize}
+  \item The outcome of the Bayesian approach is a (posterior)
+    probability density function.
+  \item But people generally expect much less information: a point
+    estimate is often enough for most practical purposes (a single
+    value for each parameter with a measure of uncertainty).
+  \item[$\Rightarrow$] We need to reduce a function to a
+    ``representative'' point.
+\bigskip
+  \item Let $L(\theta,\widehat{\theta})$ be the loss incurred if we
+    choose $\widehat{\theta}$ while $\theta$ is the true value.
+\bigskip
+  \item The idea is to choose the value of $\theta$ that minimizes
+    this loss... But the true value of $\theta$ is obviously unknown,
+    so we minimize the (posterior) expected loss instead:
+      \[
+      \theta^{\star} = \arg\min_{\widehat{\theta}} \mathbb E
+      \left[L(\theta,\widehat{\theta})\right] =
+      \arg\min_{\widehat{\theta}} \int
+      L(\theta,\widehat{\theta})p_1(\theta|\AllSample)\mathrm d\theta
+      \]
+  \item The choice of the loss function is purely arbitrary, for each
+    loss we will obtain a different point estimate.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Point estimate}
+  \framesubtitle{Quadratic loss function ($L_2$ norm)}
+  \begin{itemize}
+  \item Suppose that the loss function is quadratic:
+    \[
+    L(\theta,\widehat{\theta}) = (\theta-\widehat{\theta})'\Omega(\theta-\widehat{\theta})
+    \]
+    where $\Omega$ is a symmetric positive definite matrix. Note that
+    this function returns a (real) scalar.
+    \bigskip
+  \item The (posterior) expectation of the loss is:
+    \medskip
+    {\tiny\[
+    \begin{split}
+      \mathbb  E \left[L(\theta,\widehat{\theta})\right] &=
+      \mathbb  E \left[(\theta-\widehat{\theta})'\Omega(\theta-\widehat{\theta})\right]\\
+      &= \mathbb  E \left[\left(\theta-\mathbb E\theta-\left(\widehat{\theta}-\mathbb E\theta\right)\right)'\Omega\left(\theta-\mathbb E\theta-\left(\widehat{\theta}-\mathbb E\theta\right)\right)\right]\\
+      &= \mathbb  E \left[\left(\theta-\mathbb E\theta\right)'\Omega\left(\theta-\mathbb E\theta\right)\right]+(\widehat{\theta}-\mathbb E\theta)'\Omega(\widehat{\theta}-\mathbb E\theta)
+    \end{split}
+    \]}
+  \bigskip
+  \item Noting that the first term does not depend on the choice
+    variable, $\widehat{\theta}$, the expected loss is trivially
+    minimized when $\widehat{\theta}$ is equal to the (posterior)
+    expectation of $\theta$:
+    \[
+    \theta^{\star} = \mathbb E \left[\theta\right]
+    \]
+    \item[$\Rightarrow$] If the loss is quadratic the optimal point
+      estimate is the posterior expectation.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Point estimate}
+  \framesubtitle{Absolute value loss function ($L_1$ norm)}
+  \begin{itemize}
+  \item Suppose that $\theta$ is a scalar defined over $[a,b]$ and
+    that the loss function:
+    \[
+    L(\theta,\widehat{\theta}) = |\theta-\widehat{\theta}|
+    \]
+  \item The (posterior) expectation of the loss is:
+    \medskip
+    {\tiny\[
+    \begin{split}
+      \mathbb  E \left[L(\theta,\widehat{\theta})\right] &=
+      \int_a^b|\theta-\widehat{\theta}|p_1(\theta|\AllSample)\mathrm
+      d\theta\\
+      &=\int_a^{\widehat{\theta}}(\widehat{\theta}-\theta)p_1(\theta|\AllSample)\mathrm
+      d\theta + \int_{\widehat{\theta}}^b(\theta-\widehat{\theta})p_1(\theta|\AllSample)\mathrm
+      d\theta\\
+      &=
+      \widehat{\theta}P(\widehat{\theta}|\AllSample)-\widehat{\theta}\left(P(1-\widehat{\theta}|\AllSample)\right)
+       +\int_{\widehat{\theta}}^b\theta p_1(\theta|\AllSample)\mathrm
+      d\theta-\int_a^{\widehat{\theta}}\theta p_1(\theta|\AllSample)\mathrm
+      d\theta
+    \end{split}
+    \]}
+    where $P(x|\AllSample)$ is the posterior cumulative distribution function.
+  \end{itemize}
+
+\end{frame}
+
+\section{Marginal density of the sample}
+
+\begin{frame}
+  \frametitle{Marginal density of the sample}
+  \begin{itemize}
+  \item If we are only interested in inference about the parameters,
+    the  marginal density of the data, $p(\AllSample)$, can be omitted.
+  \item We already saw that the marginal density of the data is:
+    \[
+    p(\AllSample) = \int f(\AllSample|\theta)p_0(\theta)\mathrm d\theta
+    \]
+    \begin{itemize}
+    \item The marginal density of the sample acts as a constant of
+      integration in the expression of the posterior density.
+    \item The marginal density of the sample is an average of the likelihood
+      function (for different values of the estimated parameters)
+      weighted by the prior density.
+    \end{itemize}
+    \bigskip
+  \item[$\Rightarrow$] The marginal density of the sample is a measure
+    of fit, which does not depend on the parameters (because we
+    integrate them out).
+    \bigskip
+  \item Note that, theoretically, it is possible to compute the
+    marginal density of the sample (conditional on a model) without
+    estimating the parameters.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Marginal density of the sample}
+  \framesubtitle{A simple static model (cont'd)}
+  \begin{itemize}
+  \item Suppose again that the sample size is $T=1$. The likelihood is
+    given by:
+    \[
+    f(\AllSample|\mu) = \frac{1}{\sqrt{2\pi}}e^{-\frac{1}{2}(y_1-\mu)^2}
+    \]
+  \item The marginal density is then given by:
+    \[
+    \begin{split}
+      p(\AllSample) &=
+      \int_{-\infty}^{\infty}f(y_1|\mu)p_0(\mu)\mathrm d\mu \\
+      &=
+      (2\pi\sigma_{\mu})^{-1}\int_{-\infty}^{\infty}e^{-\frac{1}{2}\left((y_1-\mu)^2+\frac{(\mu-\mu_0)^2}{\sigma_{\mu}^2}\right)}\mathrm
+      d\mu\\
+      &=\frac{1}{\sqrt{2\pi(1+\sigma_{\mu}^2)}}e^{-\frac{(y_1-\mu_0)^2}{2(1+\sigma_{\mu}^2)}}
+    \end{split}
+    \]
+    \item We can directly obtain the same result by noting that $y_1$
+      is the sum of two Gaussian random variables: $\normal{0}{1}$ and $\normal{\mu_0}{\sigma_{\mu}^2}$.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Marginal density of the sample}
+  \framesubtitle{Model comparison}
+  \begin{itemize}
+
+  \item Suppose we have two models $\mathcal{A}$ and $\mathcal{B}$ (with two associated
+    vectors of deep parameters $\theta_\mathcal{A}$ and $\theta_\mathcal{B}$) estimated
+    using \emph{the same sample} $\AllSample$.
+    \bigskip
+  \item For each model $\mathcal{I}=\mathcal{A},\mathcal{B}$ we can evaluate, at least
+    theoretically, the marginal density of the data conditional on the model:
+    \[
+    p(\AllSample|\mathcal{I}) = \int
+    f(\sample |\theta_{\mathcal{I}},\mathcal{I})p_0(\theta_{\mathcal{I}}|\mathcal{I}) d\theta_{\mathcal{I}}
+    \]
+    by integrating out the deep parameters $\theta_{\mathcal{I}}$ from
+    the posterior kernel.
+    \bigskip
+  \item $p(\sample|\mathcal{I})$ measures the fit of model
+    $\mathcal{I}$. If we have to choose between models $\mathcal A$
+    and $\mathcal B$ we will select the model with the highest marginal
+    density of the sample.
+    \bigskip
+  \item Note that models $\mathcal A$ and $\mathcal B$ need not to be
+    nested (for instance, we do not require that $\theta_{\mathcal A}$
+    be a subset of $\theta_{\mathcal B}$) for the comparison to make
+    sense, because the compared marginal densities do not
+    depend on the parameters. The classical approach
+    (comparisons of likelihoods) by requiring nested models is much
+    less obvious.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Marginal density of the sample}
+  \framesubtitle{Model comparison (cont'd)}
+  \begin{itemize}
+
+        \item Suppose we have a prior distribution over models $\mathcal A$ and $\mathcal B$: 
+          $p(\mathcal{A})$ and $p(\mathcal{B})$.
+          \bigskip
+        \item Again, using the Bayes theorem we can compute the posterior
+            distribution over models:
+            \[
+            p(\mathcal{I}|\sample) = \frac{p(\mathcal{I})p(\sample|\mathcal{I})}
+            {\sum_{\mathcal{I}=\mathcal{A},\mathcal{B}}p(\mathcal{I})p(\sample|\mathcal{I})}
+            \]
+
+        \item This formula may easily be generalized to a collection of $N$ models.
+          \bigskip
+
+        \item In the literature posterior odds ratio, defined as:
+          \[
+          \frac{p(\mathcal{A}|\sample)}{p(\mathcal{B}|\sample)} =
+          \frac{p(\mathcal{A})}{p(\mathcal{B})}
+          \frac{p(\sample|\mathcal{A})}{p(\sample|\mathcal{B})}
+          \]
+          are often used to discriminate between different models. If
+          the posterior odds ratio is large ($>$100) we can safely
+          choose model $\mathcal A$.
+
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Marginal density of the sample}
+  \framesubtitle{Model comparison (cont'd)}
+  \begin{itemize}
+    \item Note that we do not necessarily have to choose one model.
+      \bigskip
+    \item Even if a model has a smaller posterior probability (or
+      marginal density) it may provide useful informations in some
+      directions (or frequencies), so we should not discard this
+      information.
+      \bigskip
+    \item An alternative is to mix the models.
+      \bigskip
+    \item If these models are used for forecasting inflation, we can
+      report an average of the forecasts weighted by the posterior
+      probabilities, $p(\mathcal{I}|\sample)$, instead of the
+      forecasts of the best model (in terms of marginal density)
+      $\rightarrow$ Bayesian averaging.
+  \end{itemize}
+\end{frame}
+
+\section{Forecasts}
+
+\begin{frame}
+  \frametitle{Predictive density}
+  \begin{itemize}
+  \item We often seek to use the estimated model to do inference about
+    unobserved variables.
+  \item The most obvious example is the forecasting exercise.
+  \item In the Bayesian context the density of an unobserved variable
+    (for instance the future growth of GDP) given the sample, is
+    called a predictive density.
+  \item Let $\tilde{y}$ be a vector of unobserved variables. The joint
+    posterior density of $\tilde{y}$ and $\theta$ is:
+    \[
+    p_1(\tilde{y},\theta|\AllSample) =g(\tilde{y}|\theta,\AllSample)p_1(\theta|\AllSample)
+    \]
+  \item The predictive density is obtained by integrating out the
+    parameters:
+    \[
+    p(\tilde{y}|\AllSample) = \int
+    g(\tilde{y}|\theta,\AllSample)p_1(\theta|\AllSample)\mathrm d\theta
+    \]
+    The predictive density is the average of the density of
+    $\tilde{y}$ knowing the parameters weighted by the posterior
+    density of the parameters.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Predictive density}
+  \framesubtitle{A simple static model (cont'd)}
+  \begin{itemize}
+  \item Suppose that we want to do inference about the out of sample
+    variable $y_{T+1}$ (forecast).
+    \bigskip
+  \item The density of $y_{T+1}$ conditional on the sample and on the
+    parameter is:
+    \[
+    g(y_{T+1}|\mu,\AllSample) \propto e^{-\frac{1}{2}(y_{T+1}-\mu)^2}
+    \]
+    Note that this conditional density does not depend on $\AllSample$ because the
+    model is static (for an autoregressive model, $y_T$!, $y_{T-1}$
+    would appear under the quadratic term).
+    \bigskip
+  \item Remember that the posterior density of $\mu$ is:
+    \[
+    p_1(\mu|\AllSample) \propto e^{-\frac{1}{2\mathbb
+        V[\mu]}(\mu-\mathbb E[\mu])^2}
+    \]
+    where $\mathbb E[\mu]$ and $\mathbb V[\mu]$ are the posterior first
+    and second order moments obtained earlier.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Predictive density}
+  \framesubtitle{A simple static model (cont'd)}
+  \begin{itemize}
+  \item The predictive density for $y_{T+1}$ is given by:
+    \[
+    \begin{split}
+      p(y_{T+1}|\AllSample) &= \int
+    g(y_{T+1}|\mu,\AllSample)p_1(\mu|\AllSample)\mathrm d\mu\\
+    &\propto \int_{-\infty}^{\infty}e^{-\frac{1}{2}(y_{T+1}-\mu)^2-\frac{1}{2\mathbb
+        V[\mu]}(\mu-\mathbb E[\mu])^2}\mathrm d\mu
+    \end{split}
+    \]
+    \item The terms under the exponential in the
+    last expression can be rewritten as:
+    \[
+    A(\mu) = \left[1+\frac{1}{\mathbb
+        V[\mu]}\right]\left(\mu-\frac{y_{T+1}+\mathbb
+        V[\mu]^{-1}}{1+\mathbb V[\mu]^{-1}}\right)^2+\frac{\mathbb
+      V[\mu]^{-1}}{1+\mathbb V[\mu]^{-1}}\left(y_{T+1}-\mathbb E[\mu]\right)^2
+    \]
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Predictive density}
+  \framesubtitle{A simple static model (cont'd)}
+  \begin{itemize}
+  \item Substituting $A(\mu)$ in the expression of the predictive
+    density for $y_{T+1}$ we obtain:
+    \[
+    \begin{split}
+       p(y_{T+1}|\AllSample) &\propto
+       \int_{-\infty}^{\infty}e^{-\frac{1}{2}\left[1+\frac{1}{\mathbb
+        V[\mu]}\right]\left(\mu-\frac{y_{T+1}+\mathbb
+        V[\mu]^{-1}}{1+\mathbb V[\mu]^{-1}}\right)^2
+  -\frac{1}{2}\frac{\mathbb
+      V[\mu]^{-1}}{1+\mathbb V[\mu]^{-1}}\left(y_{T+1}-\mathbb
+      E[\mu]\right)^2}\mathrm d\mu\\
+  &\propto e^{-\frac{1}{2}\frac{\mathbb
+      V[\mu]^{-1}}{1+\mathbb V[\mu]^{-1}}\left(y_{T+1}-\mathbb
+      E[\mu]\right)^2}\int_{-\infty}^{\infty}e^{-\frac{1}{2}\left[1+\frac{1}{\mathbb
+        V[\mu]}\right]\left(\mu-\frac{y_{T+1}+\mathbb
+        V[\mu]^{-1}}{1+\mathbb V[\mu]^{-1}}\right)^2}\mathrm d\mu\\
+  &\propto e^{-\frac{1}{2}\frac{\mathbb
+      V[\mu]^{-1}}{1+\mathbb V[\mu]^{-1}}\left(y_{T+1}-\mathbb
+      E[\mu]\right)^2}
+    \end{split}
+    \]
+  \item Unsurprisingly, we recognize the Gaussian density:
+    \[
+    y_{T+1}|\AllSample \sim \normal{\mathbb E[\mu]}{1+\mathbb V[\mu]}
+    \]
+  \item We would have obtained directly the same result by first
+    noting that $y_{T+1}$ is the sum of two Gaussian random variables:
+    $\normal{\mathbb E[\mu]}{\mathbb V[\mu]}$ (for the estimated
+    parameter) and $\normal{0}{1}$ (for the error term).
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Predictive density}
+  \framesubtitle{Point prediction}
+  \begin{itemize}
+  \item For reporting our forecast, we may want to select one point in
+    the predictive distribution.
+    \bigskip
+  \item We proceed as for the point estimate by choosing an arbitrary
+    loss function and minimizing the posterior expected loss.
+    \bigskip
+  \item Usually the expectation of the predictive distribution is
+    reported (rationalized with a quadratic loss function).
+  \end{itemize}
+
+\end{frame}
+
+
+\section{Likelihood of linear DSGE models}
+
+
+\begin{frame}
+  \frametitle{Estimation of DSGE models}
+  \framesubtitle{Structural form}
+  \begin{itemize}
+  \item We suppose that the DSGE model can be cast in the following form:
+  \begin{equation}\label{equ:dsge:def}
+    \mathbb E_t \left[\mathcal
+      F_{\theta}(y_{t+1},y_{t},y_{t-1},\varepsilon_t)\right] = 0
+  \end{equation}
+  with $\varepsilon_t \sim \iid{0}{\Sigma}$ is a random vector ($r \times 1$) of structural innovations,
+  $ y_t \in \Lambda\subseteq\mathbb R^n $ a vector of endogenous variables,
+  $\mathcal F_{\theta}: \Lambda^{3} \times \mathbb R^r \rightarrow \Lambda$ a
+  real function in $\mathcal C^2$ parameterized by a real vector
+  $\theta \in \Theta \subseteq \mathbb R^q$ gathering the deep parameters of the model.
+
+  \bigskip
+
+  \item The model is stochastic, forward looking and non linear.
+
+  \bigskip
+
+  \item We want to estimate (a subset of) $\theta$. For any estimation approach
+(\textcolor{gray}{indirect inference},
+   \textcolor{gray}{simulated moments}, maximum likelihood,...) we need first to solve this model.
+
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Estimation of DSGE models}
+  \framesubtitle{Reduced form}
+  \begin{itemize}
+    \item In the sequel we consider a local linear approximation
+      around the deterministic steady state of the non linear model.
+      \bigskip
+    \item The solution of the linearized model (the reduced form)
+      is:
+      \[
+      y_t = \bar y(\theta) + A(\theta) \left( y_{t-1} - \bar y(\theta)\right) + B(\theta)\varepsilon_t
+      \]
+  \end{itemize}
+
+\end{frame}
+
+
+\end{document}
+
+
+
+
+% Local Variables:
+% ispell-check-comments: exclusive
+% ispell-local-dictionary: "american-insane"
+% End:

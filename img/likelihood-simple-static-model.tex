@@ -1,0 +1,29 @@
+\begin{axis}[
+  no markers,
+  domain=0:6,
+  ymin=0,
+  axis lines=left,
+  xlabel=$\AllSample$,
+  ylabel=$\mathcal L(\mu)$,
+  every axis y label/.style={at=(current axis.above origin),anchor=south},
+  every axis x label/.style={at=(current axis.right of origin),anchor=west},
+  height=6cm,
+  width=10cm,
+  xtick=\empty,
+  ytick=\empty,
+  enlargelimits=false,
+  clip=false,
+  axis on top,
+  grid = major,
+  ]
+ \addplot [thick, samples=400] {1/(.5*sqrt(2*pi))*exp(-((x-1)^2)/(2*.5^2))} node[pos=0.345] {$\bullet$} ;
+ \addplot [thick, samples=400, red] {1/(.5*sqrt(2*pi))*exp(-((x-1.8)^2)/(2*.5^2))} node[pos=1.8] {$\bullet$};
+ \addplot [dashed, gray] coordinates {(1.8,0) (1.8, .81)} node[pos=0,below] {\small $y_1$} ;
+ \addplot [dashed, gray] coordinates {(0, .225) (1.8, .225)} node[pos=0,left] {\small $f(y_1|\mu=\bar\mu)$};
+\end{axis}
+
+% Local Variables:
+% TeX-master: "../tex/slides.tex"
+% ispell-check-comments: exclusive
+% ispell-local-dictionary: "american-insane"
+% End:
