@@ -1059,7 +1059,7 @@ $\mu$ and can be therefore omitted.
   \begin{itemize}
   \item The well known Kalman filter recursive algorithm can be used to evaluate the likelihood:
   \begin{eqnarray*}
-    v_t &=& y^{\star}_t - \bar y(\theta)^* - Z \hat y_t\\
+    v_t &=& y^{\star}_t - \bar y(\theta)^{\star} - Z \hat y_t\\
     F_t &=& Z P_t Z' {\color{blue} + \mathbb V \left[\eta\right]}\\
     K_t &=& A(\theta) P_t A(\theta)'F_t^{-1}\\
     \hat y_{t+1} &=& A(\theta) \hat y_t + K_tv_t\\
