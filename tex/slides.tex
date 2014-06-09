@@ -1,3 +1,4 @@
+% © Stéphane Adjemian, 2014
 \documentclass[10pt,slidestop]{beamer}
 
 \usepackage{etex}
@@ -33,7 +34,6 @@
 \newlength\figureheight
 \newlength\figurewidth
 \usepackage[utf8x]{inputenc}
-%\usepackage{cancel}
 
 
 \newcommand{\trace}{\mathrm{tr}}
@@ -1263,6 +1263,97 @@ N\left(0,1+\rho^2+\rho^4\right)$
         \]
     \end{enumerate}
 \end{frame}
+
+
+
+\begin{frame}
+  \frametitle{Simulation based posterior inference}
+  \framesubtitle{Metropolis--Hastings algorithm illustration -- a --}
+
+  \begin{center}
+  \scalebox{.7}{\input{../img/mhplot-a.tex}}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Simulation based posterior inference}
+  \framesubtitle{Metropolis--Hastings algorithm illustration -- b --}
+
+  \begin{center}
+  \scalebox{.7}{\input{../img/mhplot-b.tex}}
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Simulation based posterior inference}
+  \framesubtitle{Metropolis--Hastings algorithm illustration -- c --}
+
+  \begin{center}
+  \scalebox{.7}{\input{../img/mhplot-c.tex}}
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Simulation based posterior inference}
+  \framesubtitle{Tuning of the Metropolis--Hastings algorithm}
+  \begin{itemize}
+  \item How should we choose the scale factor $c$ (variance of the jumping
+    distribution)?
+  \item We define the acceptance ratio as the number of accepted
+    draws over the number of proposals:
+    \[
+    R = \frac{\# \text{ accepted draws}}{\# \text{ proposals}}
+    \]
+    {\footnotesize
+      \begin{itemize}
+      \item We do not want to have $R$ close to 0 because it means
+        that we reject almost all the proposals.
+      \item We neither want to have $R$ close to 1 because it means
+        that we accept almost all the proposals and that most
+        likely the jumping distribution proposes too small jumps.
+      \end{itemize}}
+  \item In the literature, authors generally target an acceptance
+    ratio around one third, although there is no rational for
+    that choice in the case of DSGE models.
+  \item The scale factor, $c$, must be adjusted to match this
+    target:
+    {\footnotesize
+      \begin{itemize}
+      \item If $R$ is too low, $c$ should be reduced (why?).
+      \item If $R$ is too high, $c$ should be increased (why?).
+      \end{itemize}}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Simulation based posterior inference}
+  \framesubtitle{Convergence of the Metropolis--Hastings algorithm}
+  \begin{itemize}
+  \item Another issue is the number of draws required to obtain
+    an accurate estimation of the posterior distribution.
+  \item We need to asses the convergence of the Metropolis
+    Hastings algorithm.
+  \item The estimated posterior distribution should be:
+    {\footnotesize
+      \begin{enumerate}[(i)]
+      \item stable when we increase the number of simulations.
+      \item independent of the initial condition.
+      \end{enumerate}}
+  \item To check that the estimated posterior distribution
+    satisfy these two properties, we can run multiple
+    Monte Carlo Markov Chains  and verify that:
+    {\footnotesize
+      \begin{enumerate}[(i)]
+      \item Moments are constant if the number of simulations is increased.
+      \item Pooled and Within moments are identical.
+      \end{enumerate}}
+  \item This approach is implemented in Dynare (see the manual).
+  \end{itemize}
+\end{frame}
+
 
 
 
