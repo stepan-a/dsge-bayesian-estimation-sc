@@ -1080,6 +1080,193 @@ $\mu$ and can be therefore omitted.
 \end{frame}
 
 
+\begin{frame}
+  \frametitle{Estimation of DSGE models}
+  \framesubtitle{Posterior distribution}
+
+  \begin{itemize}
+
+  \item We know that the posterior density
+    is proportional to the likelihood times the prior density.
+
+\bigskip
+
+  \item Because we do not have closed form expressions for the reduced
+    form of the model and the likelihood, we cannot obtain analytical
+    results about the posterior density.
+
+\bigskip
+
+  \item Posterior inference can be done by considering:
+
+    \begin{enumerate}
+    \item Asymptotic (Gaussian) approximation of the posterior density
+      as we saw in the previous chapter.
+    \item Simulation based methods (exact up to the randomness
+      inherent to these methods).
+    \end{enumerate}
+
+\end{itemize}
+
+\end{frame}
+
+\section{Simulation based posterior inference}
+
+\begin{frame}
+  \frametitle{Simulation based posterior inference}
+
+  \begin{itemize}
+
+  \item We need a simulation approach if we want to obtain exact
+    results  (\textit{ie} not relying on asymptotic approximation).
+
+    \bigskip
+
+  \item Noting that:
+    \[
+    \mathbb E \left[ \varphi(\psi) \right] = \int_{\Psi} \varphi (\psi) p_1(\psi|\sample)\mathrm d\psi
+    \]
+    we can use the empirical mean of $\left(\varphi(\psi^{(1)}),\varphi(\psi^{(2)}),\dots,\varphi(\psi^{(n)})\right)$,
+    where $\psi^{(i)}$ are draws from the posterior distribution to evaluate the expectation of $\varphi
+    (\psi)$. The approxomation error goes to zero when $n\rightarrow\infty$.
+
+\bigskip
+
+  \item We need to simulate draws from the posterior distribution.\newline
+
+    $\Rightarrow$ Metropolis-Hastings algorithm.
+
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}
+  \frametitle{Simulation based posterior inference}
+  \framesubtitle{A simple example -- a --}
+
+    \begin{itemize}
+        \item Imagine we want to obtain some draws from a $\mathcal N (0,4)$
+        distribution...
+
+        \bigskip
+
+        \item But we are only able to draw from $\mathcal N (0,1)$
+        and we don't realize that we should simply multiply by 2 the
+        draws from a standard normal distribution.
+
+        \bigskip
+
+        \item The idea is to build a stochastic process whose limiting
+        distribution is $\mathcal N (0,4)$.
+
+        \bigskip
+
+        \item We define the following AR(1) process:
+        \[
+            x_t = \rho x_{t-1} + \epsilon_t
+        \]
+        with $\epsilon_t \sim \mathcal N (0,1)$, $|\rho|<1$ and $x_0 =
+        0$.
+
+        \bigskip
+
+        \item We just have to choose $\rho$ such that the asymptotic
+        distribution of $\{x_t\}$ is $\mathcal N (0,4)$.
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Simulation based posterior inference}
+  \framesubtitle{A simple example -- b --}
+    We have:
+    \begin{itemize}
+        \item $x_1 = \epsilon_1 \sim \mathcal N(0,1)$
+        \item $x_2 = \rho \epsilon_1 + \epsilon_2  \sim \mathcal N\left(0,1+\rho^2\right)$
+        \item $x_3 = \rho^2 \epsilon_1 + \rho\epsilon_2+\epsilon_3  \sim \mathcal
+N\left(0,1+\rho^2+\rho^4\right)$
+        \item ... 
+        \item $x_T = \rho^{T-1} \epsilon_1 +
+          \rho^{T-2}\epsilon_2+\dots+\epsilon_{T} \sim \mathcal
+          N\left(0,1+\rho^2+\dots\rho^{2(T-1)}\right)$
+        \item ...
+        \item And asymptotically
+        \[
+            x_{\infty}\sim \mathcal N\left(0,\frac{1}{1-\rho^2}\right)
+        \]
+        So that $\mathbb V_{\infty}[x_t] = 4$ iff $\rho = \pm
+        \frac{\sqrt{3}}{2}$.
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Simulation based posterior inference}
+  \framesubtitle{A simple example -- c --}
+
+    \begin{itemize}
+        \item If we simulate enough draws from this Gaussian
+        autoregressive stochastic process, we can replicate the
+        targeted distribution.
+
+\bigskip
+
+        \item In this case it is very simple because we know exactly
+        the targeted distribution \textbf{and} we are able to obtain
+        some draws from its standardized version.
+
+\bigskip
+
+        \item This is far from true with \textsc{dsge} models. For
+        instance, we even don't have an analytical expression for
+        the posterior density.
+
+    \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Simulation based posterior inference}
+  \framesubtitle{Metropolis--Hastings algorithm}
+
+    \begin{enumerate}
+    \item Choose a starting point $\Psi^0$ (usually the posterior
+      mode) and run a loop over 2-3-4.
+
+\bigskip
+
+        \item Draw a \emph{proposal} $\Psi^{\star}$ from a \emph{jumping} distribution
+        \[
+            J(\Psi^{\star}|\Psi^{t-1}) =
+            \mathcal N(\Psi^{t-1},c\times\Omega_{m})
+        \]
+
+\bigskip
+
+        \item Compute the acceptance ratio
+        \[
+            r = \frac{p_1(\Psi^{\star}|\sample)}{p(\Psi^{t-1}|\sample)} = \frac{\mathcal
+            K(\Psi^{\star}|\sample)}{\mathcal K(\Psi^{t-1}|\sample)}
+        \]
+
+\bigskip
+
+        \item Finally
+        \[
+            \Psi^t = \left\{
+            \begin{array}{ll}
+                \Psi^{\star} & \mbox{ with probability $\min(r,1)$}\\
+                \Psi^{t-1} & \mbox{ otherwise.}
+            \end{array}\right.
+        \]
+    \end{enumerate}
+\end{frame}
+
+
+
+
 \end{document}
 
 
