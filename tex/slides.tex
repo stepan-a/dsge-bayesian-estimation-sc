@@ -1607,6 +1607,155 @@ p^{-1}(2\pi)^{-\frac{n}{2}}|\overline{\Omega}|^{-\frac{1}{2}}e^{-\frac{1}{2}(\ps
 \end{frame}
 
 
+\section{Posterior inference}
+
+\begin{frame}
+  \frametitle{Posterior inference}
+  \framesubtitle{Credible set}
+
+    \begin{itemize}
+    \item A synthetic way to characterize the posterior distribution
+    is to build something like a confidence interval.
+
+\bigskip
+
+    \item We define:
+    \[
+        P(\psi \in C) = \int_C p(\psi)\mathrm d\psi = 1-\alpha
+    \]
+    is a $100(1-\alpha)\%$ credible set for $\psi$ with respect to
+    $p(\psi)$ (for instance, with $\alpha=0.2$ we have a 80\% credible set).
+
+\bigskip
+
+    \item A $100(1-\alpha)\%$ highest probability density (HPD) credible set
+    for $\psi$ with respect to $p(\psi)$ is a $100(1-\alpha)\%$
+    credible set with the property
+    \[
+        p(\psi_1) \ge p(\psi_2)\;\;\; \forall \psi_1 \in C \mbox{ and
+        } \forall \psi_2 \in \bar C
+    \]
+    \end{itemize}
+
+  \end{frame}
+
+
+\begin{frame}
+  \frametitle{Posterior inference}
+  \framesubtitle{Density}
+
+    \begin{itemize}
+
+    \item To obtain a view of the posterior distribution we can
+    estimate the marginal posterior densities (for each parameter of the model).
+
+\bigskip
+
+    \item We use a non parametric estimator:
+    {\tiny
+    \[
+        \hat{f}(\psi) = \frac{1}{Nh}\sum_{i=1}^N K\left(\frac{\psi-\psi^{(i)}}{h}\right)
+    \]
+    }
+    where $N$ is the number of draws in the metropolis, $\psi$ is
+    a  point where we want to evaluate the posterior density,
+    $\psi^{(i)}$ is a draw from the metropolis, $K(\bullet)$ is a
+    kernel (gaussian by default in Dynare) and $h$ is a bandwidth
+    parameter.
+
+\bigskip
+
+    \item In Dynare the bandwidth parameter is, by default, optimally
+    chosen considering the Silverman's rule of thumb (controling for
+    the repetitions in the MCMC draws).
+    \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Posterior inference}
+  \framesubtitle{Predictive density}
+
+    \begin{itemize}
+
+    \item Knowing the posterior distribution of the model's
+    parameters, we can forecast the endogenous variables of the
+    model.
+
+\bigskip
+
+    \item We define the posterior predictive density as follows:
+    \[
+p({\tilde{\mathbf Y}}|\sample) = \int_{\Psi_{\mathcal A}}
+p(\tilde{\mathbf Y}, \psi_{\mathcal A}|\sample, \mathcal A)\mathrm d\psi_{\mathcal A}
+    \]
+    where, for instance, $\tilde{\mathbf Y}$ might be $y_{T+1}$.
+    Knowing that $p(\tilde{\mathbf Y}, \psi_{\mathcal A}|\sample, \mathcal A) = p(\tilde{\mathbf Y}|
+\psi_{\mathcal A},\sample, \mathcal A)p(\psi_{\mathcal A}|\sample,\mathcal A)$
+    we have:
+  \[
+    p({\tilde{\mathbf Y}}|\sample)
+    = \int_{\Psi_{\mathcal A}} p(\tilde{\mathbf Y}| \psi_{\mathcal A},\sample,
+\mathcal A)p(\psi_{\mathcal A}|\sample,\mathcal A)\mathrm d\psi_{\mathcal A}
+  \]
+
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Posterior inference}
+  \framesubtitle{Predictive density}
+
+    \begin{itemize}
+
+  \item In practice, we just have to
+    {\small
+    \begin{enumerate}
+    \item sample vectors of parameters from
+      the posterior distribution (using the MCMC draws),
+    \item compute the forecast (also IRFs if needed) for each
+      vector of parameters.
+    \end{enumerate}}
+
+\bigskip
+
+   \item In the end of this process we obtain an empirical posterior
+     distribution for the forecasts (IRFs).
+
+\bigskip
+
+   \item If our loss function is quadratic, we can then report a point
+     forecast by computing the mean of this empirical posterior distribution.
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Posterior inference}
+  \framesubtitle{Integration}
+
+  \begin{itemize}
+
+    \item More generally, the MCMC draws can be used to estimate any moments
+    of the parameters (or function of the parameters).
+
+    \bigskip
+
+    \item We have
+    \begin{eqnarray*}
+        \mathbb E\left[h(\psi)\right] &=&
+\int_{\Psi}h(\psi)p(\psi|\sample)\mathrm d\psi\\
+        &\approx& \frac{1}{N}\sum_{i=1}^Nh\left(\psi^{(i)}\right)
+    \end{eqnarray*}
+    where $\psi^{(i)}$ is a metropolis draw and $h$ is any continuous function.
+  \end{itemize}
+\end{frame}
+
+
+
 \end{document}
 
 
