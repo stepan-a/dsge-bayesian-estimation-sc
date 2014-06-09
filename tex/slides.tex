@@ -1355,7 +1355,256 @@ N\left(0,1+\rho^2+\rho^4\right)$
 \end{frame}
 
 
+\section{Marginal density estimation}
 
+\begin{frame}
+  \frametitle{Marginal density estimation}
+  \begin{itemize}
+  \item The marginal density of the sample may be written as:
+    \[
+    p(\sample|\mathcal{A}) = \int_{\Psi_{\mathcal{A}}}
+    p(\sample,\psi_{\mathcal{A}}|\mathcal{A})\mathrm d\psi_{\mathcal{A}}
+    \]
+    \bigskip
+  \item ... or equivalently:
+    \[
+    p(\sample|\mathcal{A}) = \int_{\Psi_{\mathcal{A}}}
+    \underbrace{p(\sample|\Psi_{\mathcal{A}},\mathcal{A})}_{\text{likelihood}}
+    \underbrace{p(\psi_{\mathcal{A}}|\mathcal{A})}_{\text{prior}}\mathrm d\psi_{\mathcal{A}}
+    \]
+    \bigskip
+  \item We face an integration problem.
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Marginal density estimation}
+  \framesubtitle{Asymptotic approximation}
+
+  \begin{itemize}
+
+  \item For \textsc{dsge} models we are unable to compute this
+    integral analytically or with standard numerical tools (because of
+    the curse of dimensionality).
+
+\bigskip
+
+  \item We assume that the posterior distribution is not too far from
+    a gaussian distribution. In this case we can approximate the
+    marginal density of the sample.
+
+\bigskip
+
+  \item We have:
+    \medskip
+    \[
+    p(\sample|\mathcal{A}) \approx
+    (2\pi)^{\frac{n}{2}}|\mathcal
+    H(\psi^{\ast})|^{\frac{1}{2}}p(\sample|\psi_{\mathcal{A}}^{\ast} ,\mathcal{A})
+    p(\psi_{\mathcal{A}}^{\ast}|\mathcal{A})
+    \]
+
+\bigskip
+
+  \item This approach gives accurate estimation of the marginal
+  density if the posterior distribution is uni-modal.
+
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Marginal density estimation}
+  \framesubtitle{A first simulation based method}
+
+  \begin{itemize}
+
+  \item We can estimate the marginal density using a Monte-Carlo approach
+    \[
+    \widehat{p}(\sample|\mathcal{A}) = \frac{1}{B}\sum_{b=1}^B
+    p(\sample|\psi_{\mathcal{A}}^{(b)},\mathcal{A})
+    \]
+    where $\psi_{\mathcal{A}}^{(b)}$ is sampled from the
+    prior distribution.
+
+\bigskip
+
+  \item $\widehat{p}(\sample|\mathcal{A})
+    \underset{B\rightarrow\infty}{\longrightarrow}
+    p(\sample|\mathcal{A})$.
+
+\bigskip
+
+  \item But this method is highly inefficient,
+    because:
+    \begin{itemize}
+    \item $\widehat{p}(\sample|\mathcal{A})$
+      may have a huge variance (even infinite in some pathological cases).
+    \item We are not using simulations already done
+      to obtain the posterior distribution (\textit{ie}
+      Metropolis-Hastings draws).
+    \end{itemize}
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Marginal density estimation}
+  \framesubtitle{Harmonic mean -- a --}
+
+    \begin{itemize}
+        \item Note that
+        {\tiny
+            \[
+                \mathbb{E}\left[\frac{f(\psi_{\mathcal A})}{p(\psi_{\mathcal A}|\mathcal A)
+                p(\sample|\psi_{\mathcal A},\mathcal A)}\biggl|\psi_{\mathcal
+A},\mathcal A\biggr.\right]
+                = \int_{\Psi_{\mathcal A}}
+                \frac{f(\psi_{\mathcal A})p(\psi_{\mathcal A}|\sample,\mathcal
+A)}{p(\psi_{\mathcal A}|\mathcal A)
+                p(\sample|\psi_{\mathcal A},\mathcal A)}\mathrm d\psi_{\mathcal A}
+            \]
+        }
+        where $f$ is any density function.\newline
+
+\bigskip
+
+        \item The right member of the equality, using the definition of
+        the posterior density, may be rewritten as
+        {\tiny
+            \[
+                \int_{\Psi_{\mathcal A}}
+                \frac{f(\psi_{\mathcal A})}{p(\psi_{\mathcal A}|\mathcal A)
+                p(\sample|\psi_{\mathcal A},\mathcal A)}\frac{p(\psi_{\mathcal
+A}|\mathcal A)p(\sample|\psi_{\mathcal A},\mathcal A)}
+                {\int_{\Psi_{\mathcal A}}p(\psi_{\mathcal A}|\mathcal
+A)p(\sample|\psi_{\mathcal A},\mathcal A)\mathrm d\psi_{\mathcal A}}\mathrm d\psi_{\mathcal A}
+            \]
+        }
+
+\bigskip
+
+        \item Finally, we have
+        {\tiny
+            \[
+                \mathbb{E}\left[\frac{f(\psi_{\mathcal A})}{p(\psi_{\mathcal A}|\mathcal A)
+                p(\sample|\psi_{\mathcal A},\mathcal A)}\biggl|\psi_{\mathcal
+A},\mathcal A\biggr.\right]
+                =
+                \frac{\int_{\Psi}f(\psi)\mathrm d\psi}{\int_{\Psi_{\mathcal
+A}}p(\psi_{\mathcal A}|A)
+                p(\sample|\psi_{\mathcal A},\mathcal A)\mathrm d\psi_{\mathcal A}}
+            \]
+        }
+
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Marginal density estimation}
+  \framesubtitle{Harmonic mean -- b --}
+
+
+    \begin{itemize}
+        \item So that
+        \[
+            p(\sample|\mathcal A)=\mathbb{E}\left[\frac{f(\psi_{\mathcal
+A})}{p(\psi_{\mathcal A}|\mathcal A)
+            p(\sample|\psi_{\mathcal A},\mathcal A)}\biggl|\psi_{\mathcal A},\mathcal
+A\biggr.\right]^{-1}
+        \]
+
+\bigskip
+
+        \item This suggests the following estimator of the marginal
+        density
+        \[
+            \widehat{p}(\sample|\mathcal A)= \left[\frac{1}{B}\sum_{b=1}^B
+            \frac{f(\psi_{\mathcal A}^{(b)})}{p(\psi_{\mathcal A}^{(b)}|\mathcal A)
+            p(\sample|\psi_{\mathcal A}^{(b)},\mathcal A)}\right]^{-1}
+        \]
+
+\bigskip
+
+        \item Each drawn vector $\psi_{\mathcal A}^{(b)}$ comes from the
+        Metropolis - Hastings monte-carlo.
+
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Marginal density estimation}
+  \framesubtitle{Harmonic mean -- c --}
+
+    \begin{itemize}
+        \item The preceding proof holds if we replace
+        $f(\theta)$ by 1\\ $\looparrowright$ Simple Harmonic Mean
+        estimator. But this estimator may also have a huge
+        variance.
+
+\bigskip
+
+        \item The density $f(\theta)$ may be interpreted as a
+        weighting function, we want to give less importance to extremal values of
+        $\theta$.
+
+\bigskip
+
+        \item Geweke (1999) suggests to use a truncated gaussian
+        function (modified harmonic mean estimator).
+
+    \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Marginal density estimation}
+  \framesubtitle{Harmonic mean -- d --}
+
+
+{\footnotesize
+\[ \overline{\psi} =
+\frac{1}{B}\sum_{b=1}^B\psi_{\mathcal{M}}^{(b)}
+\]
+}
+{\footnotesize
+\[ \overline{\Omega} =
+\frac{1}{B}\sum_{b=1}^B(\psi_{\mathcal{M}}^{(b)}-\overline{\psi})'(\psi_{\mathcal{M}}^{(b)}
+-\overline{\psi})
+\]
+}
+
+\bigskip
+
+\begin{itemize}
+    \item For some $p\in (0,1)$ we define
+    {\footnotesize
+    \[\widetilde{\Psi} =
+\left\{\psi_{\mathcal{M}}:(\psi_{\mathcal{M}}^{(b)}-\overline{\psi})'\overline{\Omega
+}^{-1}(\psi_{\mathcal{M}}^{(b)}-\overline{\psi})\leq
+    \chi_{1-p}^2(n)\right\}
+    \]}
+
+\bigskip
+
+    \item ... And take
+    {\footnotesize
+    \[
+        f(\psi_{\mathcal{M}}) =
+p^{-1}(2\pi)^{-\frac{n}{2}}|\overline{\Omega}|^{-\frac{1}{2}}e^{-\frac{1}{2}(\psi_{\mathcal{M}}
+-\overline{\psi})'\overline{\Omega}^{-1}(\psi_{\mathcal{M}}-\overline{\psi})}\mathbb{I}_{
+\widetilde{\Psi}}(\psi_{\mathcal{M}})
+    \]}
+\end{itemize}
+
+\end{frame}
 
 
 \end{document}
