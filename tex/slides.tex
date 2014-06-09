@@ -965,7 +965,7 @@ $\mu$ and can be therefore omitted.
     \mathbb E_t \left[\mathcal
       F_{\theta}(y_{t+1},y_{t},y_{t-1},\varepsilon_t)\right] = 0
   \end{equation}
-  with $\varepsilon_t \sim \iid{0}{\Sigma}$ is a random vector ($r \times 1$) of structural innovations,
+  with $\varepsilon_t \sim \iid{0}{\Sigma_{\varepsilon}}$ is a random vector ($r \times 1$) of structural innovations,
   $ y_t \in \Lambda\subseteq\mathbb R^n $ a vector of endogenous variables,
   $\mathcal F_{\theta}: \Lambda^{3} \times \mathbb R^r \rightarrow \Lambda$ a
   real function in $\mathcal C^2$ parameterized by a real vector
@@ -997,6 +997,84 @@ $\mu$ and can be therefore omitted.
       \[
       y_t = \bar y(\theta) + A(\theta) \left( y_{t-1} - \bar y(\theta)\right) + B(\theta)\varepsilon_t
       \]
+      where the steady state, $\bar y(\theta)$, and matrices
+      $A(\theta)$ and $B(\theta)$ are nonlinear functions of the deep
+      parameters.
+      \bigskip
+    \item The unconditional covariance matrix of $y$ solves:
+      \[
+      \Sigma_y = A(\theta)\Sigma_yA(\theta)' + B(\theta)\Sigma_{\varepsilon}B(\theta)'
+      \]
+      and the autocovariance function is defined as:
+      \[
+      \Gamma_h = A(\theta)\Gamma_{h-1}\quad\forall h\geq 1
+      \]
+      with $\Gamma_0 =\Sigma_y $ and $\Gamma_{-h} = \Gamma_h'$.
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Estimation of DSGE models}
+  \framesubtitle{Likelihood}
+  \begin{itemize}
+    \item Let $\mathcal Y_T =
+      {y_1^{\star},y_2^{\star},\dots,y_T^{\star}}$ be the sample, with
+      \[
+      y_t^{\star} = Z y_t
+      \]
+      where $Z$ is a $p\times n$ selection matrix.
+      \bigskip
+    \item The likelihood is the density of the sample. If the
+      structural innovations are Gaussian:
+      \[
+      \mathcal L = (2\pi)^{-\frac{pT}{2}}|\Sigma_{\mathbf
+        y^{\star}}|^{-\frac{1}{2}}e^{-\frac{1}{2}(\mathbf y^{\star}-\bar{\mathbf y}^{\star})'\Sigma_{\mathbf
+        y^{\star}}^{-1}(\mathbf y^{\star}-\bar{\mathbf y}^{\star})}
+      \]
+      with $\mathbf y^{\star} = (\left.\mathbf
+        y_1^{\star}\right.',\left.\mathbf
+        y_2^{\star}\right.',\dots,\left.\mathbf y_T^{\star}\right.')'$
+      a $Tp\times 1$ vector, and
+      \[
+      \Sigma_{\mathbf y^{\star}} =
+      \begin{pmatrix}
+        \Gamma_0^{\star}  & \Gamma_1^{\star}  & \Gamma_2^{\star} &  \dots   & \dots & \dots & \Gamma_{T-1}^{\star}\\
+        {\Gamma_1^{\star}}' & \Gamma_0^{\star}  & \Gamma_1^{\star} & \Gamma_2^{\star} & \dots & \dots & \Gamma_{T-2}^{\star}\\
+        {\Gamma_2^{\star}}' & {\Gamma_1^{\star}}' & \Gamma_0^{\star} & \Gamma_1^{\star} & \dots & \dots & \Gamma_{T-3}^{\star}\\
+        \vdots    &           &         &           &      &        & \\
+        {\Gamma_{T-1}^{\star}}' & {\Gamma_{T-2}^{\star}}' & \dots & \dots & \dots & {\Gamma_1^{\star}}' & \Gamma_{0}^{\star}\\
+      \end{pmatrix}
+      \]
+      where $\Gamma_h^{\star} = Z\Gamma_hZ'$.
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Estimation of DSGE models}
+  \framesubtitle{Kalman filter}
+  \begin{itemize}
+  \item The well known Kalman filter recursive algorithm can be used to evaluate the likelihood:
+  \begin{eqnarray*}
+    v_t &=& y^{\star}_t - \bar y(\theta)^* - Z \hat y_t\\
+    F_t &=& Z P_t Z' {\color{blue} + \mathbb V \left[\eta\right]}\\
+    K_t &=& A(\theta) P_t A(\theta)'F_t^{-1}\\
+    \hat y_{t+1} &=& A(\theta) \hat y_t + K_tv_t\\
+    P_{t+1} &=& A(\theta) P_t (A(\theta)-K_t Z)'+B(\theta)\Sigma_{\varepsilon} B(\theta)'
+  \end{eqnarray*}
+  for $t=1,\ldots,T$, with initial condition
+  $\hat{y}_0=y_0^{\star}-\bar y^{\star}$ and $P_0$ given by the ergodic
+  distribution of $y^{\star}$.
+
+  \bigskip
+
+\item The (log)-likelihood is:
+  \[
+  \ln L\left(\psi|\sample\right) = -\frac{Tk}{2}\ln(2\pi)-\frac{1}{2}\sum_{t=1}^T|F_t|-\frac{1}{2}v_t'F_t^{-1}v_t
+  \]
   \end{itemize}
 
 \end{frame}
