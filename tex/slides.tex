@@ -283,15 +283,28 @@
           0 & &&&-\varphi & 1
         \end{pmatrix}
       \]}
-    a $T\times T$ matrix. 
+    a $T\times T$ matrix.
+
+\bigskip
+
     \item The likelihood function can be
-    written equivalently as:
+    written equivalently as:\newline
     \[
-    \mathcal L(\varphi,\sigma_{\epsilon}^2) =
-    (2\pi)^{-\frac{T}{2}}\left(\frac{\sigma_{\epsilon}^2}{1-\varphi^2}\right)^{-\frac{1}{2}}\sigma_{\epsilon}^{T-1}
-    e^{-\frac{1-\varphi^2}{2\sigma_{\epsilon}^2}y_1^2}e^{-\frac{1}{2\sigma_{\epsilon}^2}\sum_{t=2}^T\left(y_t-\varphi
-      y_{t-1}\right)^2}
+      \begin{split}
+        \mathcal L(\varphi,\sigma_{\epsilon}^2) =
+    {\color{blue}(2\pi)^{-\frac{T-1}{2}}}&{\color{blue}\sigma_{\epsilon}^{T-1}e^{-\frac{1}{2\sigma_{\epsilon}^2}\sum_{t=2}^T\left(y_t-\varphi
+      y_{t-1}\right)^2}}\\
+    \times {\color{red}(2\pi)^{-\frac{1}{2}}}&{\color{red}\left(\frac{\sigma_{\epsilon}^2}{1-\varphi^2}\right)^{-\frac{1}{2}}
+    e^{-\frac{1-\varphi^2}{2\sigma_{\epsilon}^2}y_1^2}}
+      \end{split}
     \]
+
+    \bigskip
+
+    {\color{blue} --- Product of conditional densities,
+      $y_t|y_{\underline{t-1}}$}\newline
+
+    {\color{red} --- Marginal density of the initial condition, $y_1$}\newline
     \end{itemize}
   \end{frame}
 
