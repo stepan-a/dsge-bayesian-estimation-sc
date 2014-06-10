@@ -1381,7 +1381,7 @@ N\left(0,1+\rho^2+\rho^4\right)$
     \[
     p(\sample|\mathcal{A}) = \int_{\Psi_{\mathcal{A}}}
     \underbrace{p(\sample|\Psi_{\mathcal{A}},\mathcal{A})}_{\text{likelihood}}
-    \underbrace{p(\psi_{\mathcal{A}}|\mathcal{A})}_{\text{prior}}\mathrm d\psi_{\mathcal{A}}
+    \underbrace{p_0(\psi_{\mathcal{A}}|\mathcal{A})}_{\text{prior}}\mathrm d\psi_{\mathcal{A}}
     \]
     \bigskip
   \item We face an integration problem.
@@ -1408,13 +1408,13 @@ N\left(0,1+\rho^2+\rho^4\right)$
 
 \bigskip
 
-  \item We have:
+  \item We have (omitting the conditioning on the model):
     \medskip
     \[
-    p(\sample|\mathcal{A}) \approx
+    p(\sample) \approx
     (2\pi)^{\frac{n}{2}}|\mathcal
-    H(\psi^{\ast})|^{\frac{1}{2}}p(\sample|\psi_{\mathcal{A}}^{\ast} ,\mathcal{A})
-    p(\psi_{\mathcal{A}}^{\ast}|\mathcal{A})
+    H(\psi^{\ast})|^{\frac{1}{2}}p(\sample|\psi^{\ast})
+    p_0(\psi^{\ast})
     \]
 
 \bigskip
@@ -1435,24 +1435,23 @@ N\left(0,1+\rho^2+\rho^4\right)$
 
   \item We can estimate the marginal density using a Monte-Carlo approach
     \[
-    \widehat{p}(\sample|\mathcal{A}) = \frac{1}{B}\sum_{b=1}^B
-    p(\sample|\psi_{\mathcal{A}}^{(b)},\mathcal{A})
+    \widehat{p}(\sample) = \frac{1}{B}\sum_{b=1}^B
+    p(\sample|\psi^{(b)})
     \]
-    where $\psi_{\mathcal{A}}^{(b)}$ is sampled from the
-    prior distribution.
+    where $\psi^{(b)}$ is sampled from the prior distribution.
 
 \bigskip
 
-  \item $\widehat{p}(\sample|\mathcal{A})
+  \item $\widehat{p}(\sample)
     \underset{B\rightarrow\infty}{\longrightarrow}
-    p(\sample|\mathcal{A})$.
+    p(\sample)$.
 
 \bigskip
 
   \item But this method is highly inefficient,
     because:
     \begin{itemize}
-    \item $\widehat{p}(\sample|\mathcal{A})$
+    \item $\widehat{p}(\sample)$
       may have a huge variance (even infinite in some pathological cases).
     \item We are not using simulations already done
       to obtain the posterior distribution (\textit{ie}
@@ -1468,51 +1467,44 @@ N\left(0,1+\rho^2+\rho^4\right)$
   \framesubtitle{Harmonic mean -- a --}
 
     \begin{itemize}
-        \item Note that
-        {\tiny
+        \item For any probability density function $f$, we have:
+        {\small
             \[
-                \mathbb{E}\left[\frac{f(\psi_{\mathcal A})}{p(\psi_{\mathcal A}|\mathcal A)
-                p(\sample|\psi_{\mathcal A},\mathcal A)}\biggl|\psi_{\mathcal
-A},\mathcal A\biggr.\right]
-                = \int_{\Psi_{\mathcal A}}
-                \frac{f(\psi_{\mathcal A})p(\psi_{\mathcal A}|\sample,\mathcal
-A)}{p(\psi_{\mathcal A}|\mathcal A)
-                p(\sample|\psi_{\mathcal A},\mathcal A)}\mathrm d\psi_{\mathcal A}
-            \]
-        }
-        where $f$ is any density function.\newline
-
-\bigskip
-
-        \item The right member of the equality, using the definition of
-        the posterior density, may be rewritten as
-        {\tiny
-            \[
-                \int_{\Psi_{\mathcal A}}
-                \frac{f(\psi_{\mathcal A})}{p(\psi_{\mathcal A}|\mathcal A)
-                p(\sample|\psi_{\mathcal A},\mathcal A)}\frac{p(\psi_{\mathcal
-A}|\mathcal A)p(\sample|\psi_{\mathcal A},\mathcal A)}
-                {\int_{\Psi_{\mathcal A}}p(\psi_{\mathcal A}|\mathcal
-A)p(\sample|\psi_{\mathcal A},\mathcal A)\mathrm d\psi_{\mathcal A}}\mathrm d\psi_{\mathcal A}
+            \mathbb{E}\left[\frac{f(\psi)}{p_0(\psi)
+                p(\sample|\psi)}\biggl|\psi\biggr.\right] =
+            \int_{\Psi}
+            \frac{f(\psi)p_1(\psi|\sample)}{p_0(\psi) p(\sample|\psi)}
+            \mathrm d\psi
             \]
         }
 
 \bigskip
 
-        \item Finally, we have
-        {\tiny
+\item Using the definition of the posterior density:
+  {\footnotesize
             \[
-                \mathbb{E}\left[\frac{f(\psi_{\mathcal A})}{p(\psi_{\mathcal A}|\mathcal A)
-                p(\sample|\psi_{\mathcal A},\mathcal A)}\biggl|\psi_{\mathcal
-A},\mathcal A\biggr.\right]
+                \int_{\Psi}
+                \frac{f(\psi)}{p_0(\psi)
+                p(\sample|\psi)}\frac{p_0(\psi)p(\sample|\psi)}
+                {\int_{\Psi}p_0(\psi)p(\sample|\psi)\mathrm d\psi}\mathrm d\psi
+            \]
+        }
+
+\bigskip
+
+        \item Finally
+        {\footnotesize
+            \[
+                \mathbb{E}\left[\frac{f(\psi)}{p_0(\psi)
+                p(\sample|\psi)}\biggl|\psi\biggr.\right]
                 =
-                \frac{\int_{\Psi}f(\psi)\mathrm d\psi}{\int_{\Psi_{\mathcal
-A}}p(\psi_{\mathcal A}|A)
-                p(\sample|\psi_{\mathcal A},\mathcal A)\mathrm d\psi_{\mathcal A}}
+                \frac{\int_{\Psi}f(\psi)\mathrm d\psi}{\int_{\Psi}p_0(\psi)
+                p(\sample|\psi)\mathrm d\psi}
             \]
         }
 
     \end{itemize}
+
 \end{frame}
 
 
@@ -1524,10 +1516,7 @@ A}}p(\psi_{\mathcal A}|A)
     \begin{itemize}
         \item So that
         \[
-            p(\sample|\mathcal A)=\mathbb{E}\left[\frac{f(\psi_{\mathcal
-A})}{p(\psi_{\mathcal A}|\mathcal A)
-            p(\sample|\psi_{\mathcal A},\mathcal A)}\biggl|\psi_{\mathcal A},\mathcal
-A\biggr.\right]^{-1}
+            p(\sample)=\mathbb{E}\left[\frac{f(\psi)}{p_0(\psi)p(\sample|\psi)}\biggl|\psi\biggr.\right]^{-1}
         \]
 
 \bigskip
@@ -1535,15 +1524,15 @@ A\biggr.\right]^{-1}
         \item This suggests the following estimator of the marginal
         density
         \[
-            \widehat{p}(\sample|\mathcal A)= \left[\frac{1}{B}\sum_{b=1}^B
-            \frac{f(\psi_{\mathcal A}^{(b)})}{p(\psi_{\mathcal A}^{(b)}|\mathcal A)
-            p(\sample|\psi_{\mathcal A}^{(b)},\mathcal A)}\right]^{-1}
+            \widehat{p}(\sample)= \left[\frac{1}{B}\sum_{b=1}^B
+            \frac{f(\psi^{(b)})}{p_0(\psi^{(b)})
+            p(\sample|\psi^{(b)})}\right]^{-1}
         \]
 
 \bigskip
 
-        \item Each drawn vector $\psi_{\mathcal A}^{(b)}$ comes from the
-        Metropolis - Hastings monte-carlo.
+        \item Each drawn vector $\psi^{(b)}$ comes from the
+        Metropolis - Hastings monte-carlo simulations.
 
 \end{itemize}
 
@@ -1582,12 +1571,12 @@ A\biggr.\right]^{-1}
 
 {\footnotesize
 \[ \overline{\psi} =
-\frac{1}{B}\sum_{b=1}^B\psi_{\mathcal{M}}^{(b)}
+\frac{1}{B}\sum_{b=1}^B\psi^{(b)}
 \]
 }
 {\footnotesize
 \[ \overline{\Omega} =
-\frac{1}{B}\sum_{b=1}^B(\psi_{\mathcal{M}}^{(b)}-\overline{\psi})'(\psi_{\mathcal{M}}^{(b)}
+\frac{1}{B}\sum_{b=1}^B(\psi^{(b)}-\overline{\psi})'(\psi^{(b)}
 -\overline{\psi})
 \]
 }
@@ -1598,8 +1587,8 @@ A\biggr.\right]^{-1}
     \item For some $p\in (0,1)$ we define
     {\footnotesize
     \[\widetilde{\Psi} =
-\left\{\psi_{\mathcal{M}}:(\psi_{\mathcal{M}}^{(b)}-\overline{\psi})'\overline{\Omega
-}^{-1}(\psi_{\mathcal{M}}^{(b)}-\overline{\psi})\leq
+\left\{\psi:(\psi^{(b)}-\overline{\psi})'\overline{\Omega
+}^{-1}(\psi^{(b)}-\overline{\psi})\leq
     \chi_{1-p}^2(n)\right\}
     \]}
 
@@ -1608,10 +1597,10 @@ A\biggr.\right]^{-1}
     \item ... And take
     {\footnotesize
     \[
-        f(\psi_{\mathcal{M}}) =
-p^{-1}(2\pi)^{-\frac{n}{2}}|\overline{\Omega}|^{-\frac{1}{2}}e^{-\frac{1}{2}(\psi_{\mathcal{M}}
--\overline{\psi})'\overline{\Omega}^{-1}(\psi_{\mathcal{M}}-\overline{\psi})}\mathbb{I}_{
-\widetilde{\Psi}}(\psi_{\mathcal{M}})
+        f(\psi) =
+p^{-1}(2\pi)^{-\frac{n}{2}}|\overline{\Omega}|^{-\frac{1}{2}}e^{-\frac{1}{2}(\psi
+-\overline{\psi})'\overline{\Omega}^{-1}(\psi-\overline{\psi})}\mathbb{I}_{
+\widetilde{\Psi}}(\psi)
     \]}
 \end{itemize}
 
@@ -1663,7 +1652,7 @@ p^{-1}(2\pi)^{-\frac{n}{2}}|\overline{\Omega}|^{-\frac{1}{2}}e^{-\frac{1}{2}(\ps
 \bigskip
 
     \item We use a non parametric estimator:
-    {\tiny
+    {
     \[
         \hat{f}(\psi) = \frac{1}{Nh}\sum_{i=1}^N K\left(\frac{\psi-\psi^{(i)}}{h}\right)
     \]
@@ -1698,17 +1687,16 @@ p^{-1}(2\pi)^{-\frac{n}{2}}|\overline{\Omega}|^{-\frac{1}{2}}e^{-\frac{1}{2}(\ps
 
     \item We define the posterior predictive density as follows:
     \[
-p({\tilde{\mathbf Y}}|\sample) = \int_{\Psi_{\mathcal A}}
-p(\tilde{\mathbf Y}, \psi_{\mathcal A}|\sample, \mathcal A)\mathrm d\psi_{\mathcal A}
+p({\tilde{\mathbf Y}}|\sample) = \int_{\Psi}
+p(\tilde{\mathbf Y}, \psi|\sample)\mathrm d\psi
     \]
     where, for instance, $\tilde{\mathbf Y}$ might be $y_{T+1}$.
-    Knowing that $p(\tilde{\mathbf Y}, \psi_{\mathcal A}|\sample, \mathcal A) = p(\tilde{\mathbf Y}|
-\psi_{\mathcal A},\sample, \mathcal A)p(\psi_{\mathcal A}|\sample,\mathcal A)$
+    Knowing that $p(\tilde{\mathbf Y}, \psi|\sample) = p(\tilde{\mathbf Y}|
+\psi,\sample)p_1(\psi|\sample)$
     we have:
   \[
     p({\tilde{\mathbf Y}}|\sample)
-    = \int_{\Psi_{\mathcal A}} p(\tilde{\mathbf Y}| \psi_{\mathcal A},\sample,
-\mathcal A)p(\psi_{\mathcal A}|\sample,\mathcal A)\mathrm d\psi_{\mathcal A}
+    = \int_{\Psi} p(\tilde{\mathbf Y}| \psi,\sample)p_1(\psi|\sample)\mathrm d\psi
   \]
 
   \end{itemize}
