@@ -654,37 +654,6 @@ $\mu$ and can be therefore omitted.
 \end{frame}
 
 
-\begin{frame}
-  \frametitle{Point estimate}
-  \framesubtitle{Absolute value loss function ($L_1$ norm)}
-  \begin{itemize}
-  \item Suppose that $\theta$ is a scalar defined over $[a,b]$ and
-    that the loss function:
-    \[
-    L(\theta,\widehat{\theta}) = |\theta-\widehat{\theta}|
-    \]
-  \item The (posterior) expectation of the loss is:
-    \medskip
-    {\tiny\[
-    \begin{split}
-      \mathbb  E \left[L(\theta,\widehat{\theta})\right] &=
-      \int_a^b|\theta-\widehat{\theta}|p_1(\theta|\AllSample)\mathrm
-      d\theta\\
-      &=\int_a^{\widehat{\theta}}(\widehat{\theta}-\theta)p_1(\theta|\AllSample)\mathrm
-      d\theta + \int_{\widehat{\theta}}^b(\theta-\widehat{\theta})p_1(\theta|\AllSample)\mathrm
-      d\theta\\
-      &=
-      \widehat{\theta}P(\widehat{\theta}|\AllSample)-\widehat{\theta}\left(P(1-\widehat{\theta}|\AllSample)\right)
-       +\int_{\widehat{\theta}}^b\theta p_1(\theta|\AllSample)\mathrm
-      d\theta-\int_a^{\widehat{\theta}}\theta p_1(\theta|\AllSample)\mathrm
-      d\theta
-    \end{split}
-    \]}
-    where $P(x|\AllSample)$ is the posterior cumulative distribution function.
-  \end{itemize}
-
-\end{frame}
-
 \section{Marginal density of the sample}
 
 \begin{frame}
