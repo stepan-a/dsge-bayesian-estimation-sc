@@ -1,0 +1,141 @@
+\documentclass[a4paper,10pt]{amsart}
+
+\usepackage[a4paper]{geometry}
+\usepackage{amssymb}
+\usepackage{float}
+\usepackage{setspace}
+\usepackage{mathrsfs}
+\usepackage{graphicx}
+\usepackage{psfrag}
+\usepackage{dcolumn}
+\usepackage{multirow}
+\usepackage{hyperref}
+\usepackage{subfigure}
+\usepackage{algorithms/algorithm}
+\usepackage{algorithms/algorithmic}
+\usepackage[english]{babel}
+\usepackage[round]{natbib}
+\usepackage[nice]{nicefrac}
+\usepackage{fancybox}
+\usepackage{multicol}
+\usepackage{pgf}
+\usepackage{tikz}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+
+\newcolumntype{.}{D{.}{.}{-1}}
+\newcolumntype{a}{D{.}{.}{10}}
+\setlength{\parindent}{0pt}
+
+\pdfcompresslevel=9
+
+\hypersetup{
+    bookmarks=false,
+    unicode=true,
+    pdftoolbar=false,
+    pdfmenubar=false,
+    pdffitwindow=true,
+    pdfstartview={FitH},
+    pdftitle={Estimation of an RBC model with Dynare},
+    pdfauthor={Stéphane Adjemian},
+    pdfcreator={Stéphane Adjemian},
+    pdfproducer={pdflatex},
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    filecolor=blue,
+    urlcolor=blue
+}
+
+\begin{document}
+
+\title{Estimation of an RBC model with Dynare}
+\author{Stéphane Adjemian}
+\date{}
+
+\maketitle
+
+Consider the following RBC model (social planner program):
+\begin{equation}
+  \label{eq:social-planner-problem:1}\tag{SP$_{1}$-1}
+  \begin{split}
+    \max_{\{c_{t+j},l_{t+j},k_{t+1+j}\}_{j=0}^{\infty}} &\quad \mathcal W_t = \sum_{j=0}^{\infty}\beta^ju(c_{t+j},l_{t+j})\\
+           \underline{s.t.}   &  \\
+              \qquad y_t &= c_t + i_t\\
+              \qquad y_t &= A_tf(k_t,l_t)\\
+              \qquad k_{t+1} &= i_t + (1-\delta)k_t\\
+              \qquad A_{t} &= {A^{\star}}e^{a_{t}}\\
+              \qquad a_{t} &= \rho a_{t-1} + \varepsilon_t
+  \end{split}
+\end{equation}
+where preferences and technology are characterized as follows:
+\begin{equation}
+  \label{eq:utility}
+  u(c_t,l_t) = \frac{\left(c_t^{\theta}(1-l_t)^{1-\theta}\right)^{\tau}}{1-\tau}
+\end{equation}
+and
+\begin{equation}
+  \label{eq:production}
+  f(k_t,l_t) = \left(\alpha k_t^{\psi} + (1-\alpha)l_t^{\psi}\right)^{\frac{1}{\psi}}
+\end{equation}
+and $\varepsilon_t$ is a Gaussian white noise with zero mean and variance $\sigma_{\varepsilon}^2$. The first order conditions are given by:
+\begin{subequations}
+  \label{eq:foc:1}
+  \begin{equation}
+    \label{eq:foc:1:euler}
+    u_c(c_t,l_t) - \beta \mathbb E_t\left[ u_c(c_{t+1},l_{t+1})\Bigl(A_{t+1}f_k(k_{t+1},l_{t+1}) + 1 -\delta\Bigr) \right] = 0
+  \end{equation}
+  \begin{equation}
+    \label{eq:foc:1:labour}
+    -\frac{u_{l}(c_t,l_t)}{u_c(c_t,l_t)} - A_tf_l(k_t,l_t) = 0
+  \end{equation}
+  \begin{equation}
+    \label{eq:cno:1:capital_law_of_motion}
+    c_t + k_{t+1} - A_tf(k_t,l_t)- (1-\delta)k_t = 0
+  \end{equation}
+\end{subequations}
+
+\bigskip
+
+\textbf{(1)}  Write  a  mod  file  for this  model  (with  a  sensible
+calibration of the parameters and a steady state block)\footnote{An
+  example is available \href{https://bitbucket.org/stepan-a/dsge-bayesian-estimation-sc/src/master/mod/rbc.mod}{here}.}.\newline
+
+\textbf{(2)} Using the \verb+stoch_simul+ command simulate a sample of
+10000 observations and save it in a file.\newline
+
+\textbf{(3)} Define priors over a subset of the parameters you want to
+estimate.\newline
+
+\textbf{(4)} Estimate  the posterior mode  (with the \verb+estimation+
+command)\footnote{If  you  consider  that  more  than  one  endogenous
+  variable is observed you will  run into problems.  Why? How to solve
+  this issue?},  considering a sample of 100  observations.  Check the
+estimated  posterior mode (using  the \verb+mode_check+  command).  If
+Dynare  warns you  saying  that  the hessian  matrix  is not  positive
+definite,  use  another  optimization  algorithm  starting  from  your
+previous  estimate  of  the  posterior  mode  or  change  the  initial
+conditions.\newline
+
+\textbf{(5)}  Once   you  are   satisfied  with  the   posterior  mode
+estimation,  run  a  MCMC  with $3\times5000$  iterations.  Check  the
+convergence  diagnostics.  If  the  MCMC  did  not  converge  to  the
+(ergodic) posterior distribution rerun a metropolis without discarding
+the previous draws.\newline
+
+
+\textbf{(6)} Evaluate  the robustness of your results  with respect to
+the  specification of the  prior beliefs  (re-estimate the  prior mode
+with different priors).\newline
+
+\textbf{(7)} Using  the  same   dataset,  estimate   a  misspecified
+model\footnote{Obviously, you  also need to adapt  the steady state.}
+(for instance the same  model with a Cobb-Douglas production function,
+or the same model with a separable utility function, or the same model
+with  a representative  household offering  inelastically one  unit of
+labour). Compare the estimates  of the common deep parameters. Compare
+the marginal densities of the different models.
+
+\end{document}
