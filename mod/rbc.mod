@@ -14,7 +14,7 @@ rho     =  0.9500;
 effstar =  1.0000;
 sigma   =  0.0100;
 
-model(use_dll);
+model;
 
   // Eq. n°1:
   efficiency = rho*efficiency(-1) + sigma*EfficiencyInnovation;
