@@ -1,11 +1,17 @@
-LATEX = pdflatex
+TEXFILES = mhplot-a.tex mhplot-b.tex mhplot-c.tex
 
-mhplots: build_mh_plots.m
+
+all: plots.done clean
+
+plots.done: build_mh_plots.m 
 	@echo "Build plots with matlab2tikz..."
 	@matlab -nodesktop -nosplash -r "build_mh_plots; quit" > matlab.log
+	@touch plots.done
 
-clean:
-	rm mhplot-a.tex mhplot-b.tex mhplot-c.tex
-	rm matlab.log
 
-all: mhplots
+clean: 
+	@rm -f matlab.log
+
+cleanall:
+	@rm $(TEXFILES)
+	@rm plots.done
