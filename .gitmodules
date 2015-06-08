@@ -1,0 +1,3 @@
+[submodule "matlab2tikz"]
+	path = matlab2tikz
+	url = git@github.com:nschloe/matlab2tikz.git
