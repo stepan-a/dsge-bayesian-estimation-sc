@@ -8,3 +8,5 @@ tex/slides.nav
 tex/slides.out
 tex/slides.snm
 tex/slides.toc
+tex/*.pdf
+*~
