@@ -1,4 +1,4 @@
-var Capital, Output, Labour, Consumption, Efficiency, efficiency, ExpectedTerm;
+var Capital, Output, Labour, Consumption, Efficiency, efficiency ;
 
 varexo EfficiencyInnovation;
 
@@ -32,10 +32,8 @@ model;
   ((1-theta)/theta)*(Consumption/(1-Labour)) - (1-alpha)*(Output/Labour)^(1-psi);
 
   // Eq. n°6:
-  (((Consumption^theta)*((1-Labour)^(1-theta)))^(1-tau))/Consumption - ExpectedTerm(1);
-
-  // Eq. n°7:
-  ExpectedTerm = beta*((((Consumption^theta)*((1-Labour)^(1-theta)))^(1-tau))/Consumption)*(alpha*((Output/Capital(-1))^(1-psi))+1-delta);
+  (((Consumption^theta)*((1-Labour)^(1-theta)))^(1-tau))/Consumption
+  - beta*((Consumption(1)^theta)*((1-Labour(1))^(1-theta)))^(1-tau)/Consumption(1)*(alpha*((Output(1)/Capital)^(1-psi))+1-delta) ;
 
 end;
 
@@ -60,6 +58,7 @@ steady_state_model;
   Consumption = Consumption_per_unit_of_Labour*Labour;
   Capital = Labour/Labour_per_unit_of_Capital;
   Output = Output_per_unit_of_Capital*Capital;
-  ExpectedTerm = beta*((((Consumption^theta)*((1-Labour)^(1-theta)))^(1-tau))/Consumption)*(alpha*((Output/Capital)^(1-psi))+1-delta);
 
 end;
+
+steady;
