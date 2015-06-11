@@ -62,3 +62,6 @@ steady_state_model;
 end;
 
 steady;
+
+@#include "simulation.inc"
+@#include "estimation.inc"
