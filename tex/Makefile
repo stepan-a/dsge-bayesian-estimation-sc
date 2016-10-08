@@ -1,5 +1,7 @@
 LATEX = pdflatex
 
+all: slides.pdf exo.pdf clean
+
 slides.pdf: slides.tex
 	@echo "Compile slides..."
 	@while ($(LATEX) slides.tex > /dev/null ; \
@@ -15,10 +17,9 @@ exo.pdf: exo.tex
 	@echo "Produced exo.pdf"
 
 clean:
-	rm -f *.aux *.log *.out *.nav *.rel *.toc *.snm *.synctex.gz *.vrb
-	rm -rf auto
+	@rm -f *.aux *.log *.out *.nav *.rel *.toc *.snm *.synctex.gz *.vrb
+	@rm -rf auto
 
 cleanall:
-	rm -f *.pdf
+	@rm -f *.pdf
 
-all: slides.pdf exo.pdf clean
