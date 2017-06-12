@@ -63,5 +63,11 @@ end;
 
 steady;
 
-@#include "simulation.inc"
-@#include "estimation.inc"
+// Uncomment the following line to trigger the simulation of an artificial sample. This is mandatory
+// only the first time you run rbc.mod (as long as you do not delete the generated m file named rbcdataset.m). 
+
+//@#include "simulation.inc"
+
+// Uncomment the following line to trigger the estimation.
+
+//@#include "estimation.inc"
