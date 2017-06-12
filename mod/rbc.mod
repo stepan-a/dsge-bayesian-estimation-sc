@@ -1,3 +1,5 @@
+// © Stéphane Adjemian, 2014-2017
+
 var Capital, Output, Labour, Consumption, Efficiency, efficiency ;
 
 varexo EfficiencyInnovation;

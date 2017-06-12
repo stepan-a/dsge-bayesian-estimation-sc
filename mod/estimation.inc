@@ -1,3 +1,5 @@
+// © Stéphane Adjemian, 2014-2017
+
 varobs Output;
 
 estimated_params;

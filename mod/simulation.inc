@@ -1,3 +1,5 @@
+// © Stéphane Adjemian, 2014-2017
+
 shocks;
   var EfficiencyInnovation = 1;
 end;
