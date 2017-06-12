@@ -1,15 +1,13 @@
 TEXFILES = mhplot-a.tex mhplot-b.tex mhplot-c.tex
+MATLAB=/home/${USER}/matlab/R2017a/bin/matlab
 
+all: mhplot-a.tex clean
 
-all: plots.done clean
-
-plots.done: build_mh_plots.m 
+mhplot-a.tex: build_mh_plots.m 
 	@echo "Build plots with matlab2tikz..."
-	@matlab -nodesktop -nosplash -r "build_mh_plots; quit" > matlab.log
-	@touch plots.done
+	@${MATLAB} -nodesktop -nosplash -r "addpath('../matlab2tikz/src');  build_mh_plots; exit" > matlab.log
 
-
-clean: 
+clean:
 	@rm -f matlab.log
 
 cleanall:

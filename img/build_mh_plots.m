@@ -1,6 +1,6 @@
-% © Stéphane Adjemian, 2005, 2014
+function build_mh_plots()
 
-addpath ../matlab2tikz/src
+% © Stéphane Adjemian, 2005, 2014, 2017
 
 gausdens = inline('exp(-.5*((x-mu)/sigma).^2)/sqrt(2*pi)/sigma','x','mu','sigma');
 abscissa = -6:0.01:6;
