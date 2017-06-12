@@ -1728,6 +1728,29 @@ p(\tilde{\mathbf Y}, \psi|\sample)\mathrm d\psi
 \end{frame}
 
 
+\begin{frame}[fragile]
+  \frametitle{Estimation in pratice}
+
+  \begin{itemize}
+
+  \item Declare the set of observed variables with \verb+varobs+.
+
+  \item Declare the priors with the \verb+estimated_params+ block (available priors: uniform, gamma, inverse gamma, gaussian, beta and weibull).
+
+  \item Use the estimation command
+
+    \begin{itemize}
+    \item Estimates the posterior mode (used as an initial condition for MCMC),
+    \item Runs the MCMC,
+    \item Computes posterior moments.
+    \end{itemize}
+
+  \item Possible trouble with the first step if the hessian matrix is not positive $\Rightarrow$ The estimated posterior mode is not a mode. $\Rightarrow$ Try other optimization algorithms and/or different initial conditions.
+
+  \end{itemize}
+\end{frame}
+
+
 
 \end{document}
 
