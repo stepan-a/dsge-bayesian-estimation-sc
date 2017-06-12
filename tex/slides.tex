@@ -429,7 +429,7 @@
   \frametitle{Prior and posterior beliefs}
   \framesubtitle{A simple static model (cont'd)}
   \begin{itemize}
-  \item For the sake of simplicity, we will see why later, we choose a
+  \item For the sake of simplicity, we choose a
     Gaussian prior for the parameter $\mu$, with prior expectation
     $\mu_0$ and prior variance $\sigma_{\mu}^2$:
     \[
@@ -603,7 +603,7 @@ $\mu$ and can be therefore omitted.
   \item But people generally expect much less information: a point
     estimate is often enough for most practical purposes (a single
     value for each parameter with a measure of uncertainty).
-  \item[$\Rightarrow$] We need to reduce a function to a
+  \item[$\Rightarrow$] We need to reduce a distribution to a
     ``representative'' point.
 \bigskip
   \item Let $L(\theta,\widehat{\theta})$ be the loss incurred if we
@@ -818,13 +818,13 @@ $\mu$ and can be therefore omitted.
     \[
     p_1(\tilde{y},\theta|\AllSample) =g(\tilde{y}|\theta,\AllSample)p_1(\theta|\AllSample)
     \]
-  \item The predictive density is obtained by integrating out the
+  \item The posterior predictive density is obtained by integrating out the
     parameters:
     \[
     p(\tilde{y}|\AllSample) = \int
     g(\tilde{y}|\theta,\AllSample)p_1(\theta|\AllSample)\mathrm d\theta
     \]
-    The predictive density is the average of the density of
+    The posterior predictive density is the average of the density of
     $\tilde{y}$ knowing the parameters weighted by the posterior
     density of the parameters.
   \end{itemize}
@@ -844,7 +844,7 @@ $\mu$ and can be therefore omitted.
     g(y_{T+1}|\mu,\AllSample) \propto e^{-\frac{1}{2}(y_{T+1}-\mu)^2}
     \]
     Note that this conditional density does not depend on $\AllSample$ because the
-    model is static (for an autoregressive model, $y_T$!, $y_{T-1}$
+    model is static (for an autoregressive model, at least $y_T$
     would appear under the quadratic term).
     \bigskip
   \item Remember that the posterior density of $\mu$ is:
@@ -874,7 +874,7 @@ $\mu$ and can be therefore omitted.
     \item The terms under the exponential in the
     last expression can be rewritten as:
     \[
-    A(\mu) = \left[1+\frac{1}{\mathbb
+    \left[1+\frac{1}{\mathbb
         V[\mu]}\right]\left(\mu-\frac{y_{T+1}+\mathbb
         V[\mu]^{-1}}{1+\mathbb V[\mu]^{-1}}\right)^2+\frac{\mathbb
       V[\mu]^{-1}}{1+\mathbb V[\mu]^{-1}}\left(y_{T+1}-\mathbb E[\mu]\right)^2
@@ -887,8 +887,7 @@ $\mu$ and can be therefore omitted.
   \frametitle{Predictive density}
   \framesubtitle{A simple static model (cont'd)}
   \begin{itemize}
-  \item Substituting $A(\mu)$ in the expression of the predictive
-    density for $y_{T+1}$ we obtain:
+  \item By substitution in the expression of the predictive density for $y_{T+1}$ we obtain:
     \[
     \begin{split}
        p(y_{T+1}|\AllSample) &\propto
@@ -903,8 +902,7 @@ $\mu$ and can be therefore omitted.
       E[\mu]\right)^2}\int_{-\infty}^{\infty}e^{-\frac{1}{2}\left[1+\frac{1}{\mathbb
         V[\mu]}\right]\left(\mu-\frac{y_{T+1}+\mathbb
         V[\mu]^{-1}}{1+\mathbb V[\mu]^{-1}}\right)^2}\mathrm d\mu\\
-  &\propto e^{-\frac{1}{2}\frac{\mathbb
-      V[\mu]^{-1}}{1+\mathbb V[\mu]^{-1}}\left(y_{T+1}-\mathbb
+  &\propto e^{-\frac{1}{2}\frac{1}{1+\mathbb V[\mu]}\left(y_{T+1}-\mathbb
       E[\mu]\right)^2}
     \end{split}
     \]
@@ -1042,7 +1040,7 @@ $\mu$ and can be therefore omitted.
   \frametitle{Estimation of DSGE models}
   \framesubtitle{Kalman filter}
   \begin{itemize}
-  \item The well known Kalman filter recursive algorithm can be used to evaluate the likelihood:
+  \item The well known Kalman filter bayesian recursive algorithm can be used to evaluate the likelihood:
   \begin{eqnarray*}
     v_t &=& y^{\star}_t - \bar y(\theta)^{\star} - Z \hat y_t\\
     F_t &=& Z P_t Z' {\color{blue} + \mathbb V \left[\eta\right]}\\
@@ -1056,10 +1054,13 @@ $\mu$ and can be therefore omitted.
 
   \bigskip
 
-\item The (log)-likelihood is:
-  \[
-  \ln \mathcal L = -\frac{Tp}{2}\ln(2\pi)-\frac{1}{2}\sum_{t=1}^T|F_t|-\frac{1}{2}v_t'F_t^{-1}v_t
-  \]
+  \item The (log)-likelihood is:
+    \[
+      \ln \mathcal L = -\frac{Tp}{2}\ln(2\pi)-\frac{1}{2}\sum_{t=1}^T|F_t|-\frac{1}{2}v_t'F_t^{-1}v_t
+    \]
+
+  \item $F_t$ is full rank only if we have at least as many innovations as observed variables.
+
   \end{itemize}
 
 \end{frame}
@@ -1085,8 +1086,7 @@ $\mu$ and can be therefore omitted.
   \item Posterior inference can be done by considering:
 
     \begin{enumerate}
-    \item Asymptotic (Gaussian) approximation of the posterior density
-      as we saw in the previous chapter.
+    \item Asymptotic (Gaussian) approximation of the posterior density.
     \item Simulation based methods (exact up to the randomness
       inherent to these methods).
     \end{enumerate}
