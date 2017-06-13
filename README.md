@@ -1,7 +1,7 @@
 To compile the slides, you need to have Matlab installed on your computer. Matlab is used to produce three figures in the slides (those illustrating the Metropolis-Hastings algorithm). You also need to install matlab2tikz which is provoided as a submodule.
 
  1. Install the submodule
-5B	```script
+	```script
 	~$ git submodule --init
 	```
 
