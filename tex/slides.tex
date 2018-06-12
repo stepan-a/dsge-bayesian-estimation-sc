@@ -1,9 +1,9 @@
 % © Stéphane Adjemian, 2014-2017
 
 \documentclass[10pt,slidestop]{beamer}
+\synctex=1
 
 \usepackage{etex}
-
 \usepackage{fourier-orns}
 \usepackage{ccicons}
 \usepackage{amssymb}
@@ -267,6 +267,53 @@
   \end{frame}
 
 
+
+\section{Prior and posterior beliefs}
+
+\begin{frame}
+  \frametitle{Bayes theorem}
+
+  \begin{itemize}
+
+  \item Let $A$ and $B$ be two events.
+
+    \bigskip
+
+  \item Let $\mathbb P(A)$ and  $\mathbb P(B)$ be the marginal
+    probabilities.
+
+    \bigskip
+
+  \item Let $\mathbb P(A \cap B)$ be the joint probability of $A$ and $B$.
+
+    \bigskip
+
+  \item The Bayes theorem states that the probability of $B$
+    conditional on $A$ is given by:
+    \[
+    \mathbb P(B|A) = \frac{\mathbb P(A \cap B)}{\mathbb P(A)}
+    \]
+
+    \bigskip
+
+  \end{itemize}
+
+  \begin{block}{Splitting a joint probability}
+    \[
+      \mathbb P(A \cap B) = \mathbb P(B|A)\mathbb P(A)\quad\text{ or }\quad \mathbb P(A \cap B) = \mathbb P(A|B)\mathbb P(B)
+    \]
+  \end{block}
+
+  \bigskip
+
+  \begin{block}{Conditioning inversion}
+    \[
+      \Rightarrow \mathbb P(B|A) = \frac{\mathbb P(A|B)\mathbb P(B)}{\mathbb P(A)}
+    \]
+  \end{block}
+
+   \end{frame}
+
 \begin{frame}
   \frametitle{ML Estimation}
   \framesubtitle{A simple dynamic model (cont'd)}
@@ -289,12 +336,16 @@
 
 \bigskip
 
-    \item The likelihood function can be
+   \item First manifestation of the Bayes theorem.
+
+\bigskip
+
+    \item The (ecact) likelihood function can be
     written equivalently as:\newline
     \[
       \begin{split}
         \mathcal L(\varphi,\sigma_{\epsilon}^2) =
-    {\color{blue}(2\pi)^{-\frac{T-1}{2}}}&{\color{blue}\sigma_{\epsilon}^{T-1}e^{-\frac{1}{2\sigma_{\epsilon}^2}\sum_{t=2}^T\left(y_t-\varphi
+    {\color{blue}(2\pi)^{-\frac{T-1}{2}}}&{\color{blue}\sigma_{\epsilon}^{-(T-1)}e^{-\frac{1}{2\sigma_{\epsilon}^2}\sum_{t=2}^T\left(y_t-\varphi
       y_{t-1}\right)^2}}\\
     \times {\color{red}(2\pi)^{-\frac{1}{2}}}&{\color{red}\left(\frac{\sigma_{\epsilon}^2}{1-\varphi^2}\right)^{-\frac{1}{2}}
     e^{-\frac{1-\varphi^2}{2\sigma_{\epsilon}^2}y_1^2}}
@@ -304,61 +355,12 @@
     \bigskip
 
     {\color{blue} --- Product of conditional densities,
-      $y_t|y_{\underline{t-1}}$}\newline
+      $y_t|y_{\underline{t-1}}$} (the conditional likelihood)\newline
 
     {\color{red} --- Marginal density of the initial condition, $y_1$}\newline
     \end{itemize}
   \end{frame}
 
-\section{Prior and posterior beliefs}
-
-\begin{frame}
-  \frametitle{Bayes theorem}
-
-  \begin{itemize}
-
-  \item Let $A$ and $B$ be two events.
-
-    \bigskip
-
-  \item Let $\mathbb P(A)$ and  $\mathbb P(B)$ be the marginal
-    probabilities of these events.
-
-    \bigskip
-
-  \item Let $\mathbb P(A \cap B)$ be the joint probability of events $A$
-    and $B$.
-
-    \bigskip
-
-  \item The Bayes theorem states that the probability of $B$
-    conditional on $A$ is given by:
-    \[
-    \mathbb P(B|A) = \frac{\mathbb P(A \cap B)}{\mathbb P(A)}
-    \]
-
-    \bigskip
-
-  \item Or equivalently, that a joint probability can be expressed as
-    the product of a conditional density and a marginal density:
-    \[
-      \mathbb P(A \cap B) = \mathbb P(B|A)\mathbb P(A)\quad\text{ or }\quad \mathbb P(A \cap B) = \mathbb P(A|B)\mathbb P(B)
-    \]
-
-  \bigskip
-
-  \item Conditioning inversion:
-    \[
-      \Rightarrow \mathbb P(B|A) = \frac{\mathbb P(A|B)\mathbb P(B)}{\mathbb P(A)}
-    \]
-
-  \bigskip
-
-  \item Same for continuous random variables.
-
-  \end{itemize}
-
-   \end{frame}
 
 
 \begin{frame}
@@ -467,8 +469,11 @@
     they convey all the necessary sample information regarding the
     inference w.r.t $\mu$.
 
-  \item We use this alternative expression of the likelihood to show
-    that the posterior density is Gaussian. We have:
+  \item The likelihood is proportional to a Gaussian density centered on $\widehat \mu$ with variance $\nicefrac{1}{T}$.\newline
+
+    \bigskip
+
+  \item The posterior density:
     \[
     p_1(\mu|\AllSample) \propto \frac{1}{\sigma_{\mu}\left(\sqrt{2\pi}\right)^{T+1}}e^{-\frac{1}{2\sigma_{\mu}^2}\left(\mu-\mu_0\right)^2-\frac{\nu}{2}s^2 - \frac{T}{2} \left(\mu-\widehat{\mu}\right)^2}
     \]
@@ -483,7 +488,7 @@
 
   \begin{itemize}
 
-  \item We can simplify the previous expression by omitting all the
+  \item Previous expression can be simplified by omitting all the
     multiplicative terms not related to $\mu$ (this is legal because we are
     interested in a proportionality w.r.t $\mu$):
     \[
@@ -592,6 +597,70 @@ $\mu$ and can be therefore omitted.
     the ML estimator.
   \end{itemize}
 \end{frame}
+
+
+\begin{frame}
+  \frametitle{Prior and posterior beliefs}
+  \framesubtitle{A simple dynamic model (cont'd, flat prior)}
+
+      \begin{itemize}
+      \item For a real parameter, the prior is proportional to 1.
+        \[
+        p_{0}(\varphi) \propto 1
+        \]
+      \item For a positive parameter, the prior of the log of the prior is proportional to 1.
+        \[
+        p_{0}(\log\sigma_{\epsilon}^{2}) \propto 1\quad\Leftrightarrow\quad p_{0}(\sigma_{\epsilon}^{2})\propto\frac{1}{\sigma_{\epsilon}}
+        \]
+      \end{itemize}
+
+      \bigskip
+
+      \begin{block}{Flat prior for AR(1) model}
+        \[
+      p_0\left(\varphi, \sigma_{\epsilon}^{2}\right) \propto \frac{1}{\sigma_{\epsilon}}
+      \]
+      \end{block}
+      $\hookrightarrow$ Parameters $\varphi$ and $\sigma_{\epsilon}^{2}$ are a priori independent.\newline
+      $\hookrightarrow$ This prior is not a pdf!
+    \end{frame}
+
+
+\begin{frame}
+  \frametitle{Prior and posterior beliefs}
+  \framesubtitle{A simple dynamic model (cont'd, flat prior)}
+
+  \begin{itemize}
+
+      \item Use the conditional likelihood (omitting the marginal density of the first observation).\newline
+
+      \item The posterior density is:
+        \[
+          \begin{split}
+            p_{1}(\varphi,\sigma_{\epsilon}^{2}) &\propto \underbrace{\sigma_{\epsilon}^{-1}}_{\text{Prior}}
+\underbrace{(2\pi)^{-\frac{T-1}{2}}\sigma_{\epsilon}^{-(T-1)}e^{-\frac{1}{2\sigma_{\epsilon}^2}\sum_{t=2}^T\left(y_t-\varphi
+    y_{t-1}\right)^2}}_{\text{Conditional likelihood}} \\
+&\propto
+\sigma_{\epsilon}^{-T}e^{-\frac{1}{2\sigma_{\epsilon}^2}\sum_{t=2}^T\left(y_t-\varphi
+    y_{t-1}\right)^2}
+          \end{split}
+        \]
+      \end{itemize}
+
+
+      \begin{block}{Posterior density}
+        \[
+          \begin{split}
+            \varphi | \sigma_{\epsilon}^{2}, \sample  &\sim
+            \normal{\frac{\sum_{t=2}^{T}y_{t}y_{t-1}}{\sum_{t=2}^{T}y_{t-1}^2} }{ \frac{\sigma_{\epsilon}^2}{\sum_{t=2}^{T}y_{t-1}^2}  }\\
+            \sigma_{\epsilon}^{2} | \sample  &\sim \mathcal{IG}\left(T-2, \sum_{t=2}^T\widehat{\epsilon}_{t}^{2}\right)
+          \end{split}
+        \]
+      \end{block}
+
+    \end{frame}
+
+
 
 \section{Point estimate}
 
@@ -1761,4 +1830,5 @@ p(\tilde{\mathbf Y}, \psi|\sample)\mathrm d\psi
 % Local Variables:
 % ispell-check-comments: exclusive
 % ispell-local-dictionary: "american-insane"
+% TeX-master: t
 % End:
